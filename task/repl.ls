@@ -21,7 +21,7 @@ const COMMANDS =
   * cmd:'b.d ' lev:0 desc:'build - delete'                fn:Build.delete-files
   * cmd:'b.nd' lev:0 desc:'build - npm delete'            fn:Build.delete-modules
   * cmd:'b.nr' lev:0 desc:'build - npm refresh'           fn:Build.refresh-modules
-  * cmd:'b.r ' lev:0 desc:'build - recycle'               fn:Run.recycle-site
+  * cmd:'b.r ' lev:0 desc:'build - recycle'               fn:Run.recycle-app
   * cmd:'t   ' lev:0 desc:'test  - run'                   fn:Test.run
   * cmd:'d.lo' lev:1 desc:'dist  - publish to local'      fn:Dist.publish-local
   * cmd:'d.PU' lev:2 desc:'dist  - publish to public npm' fn:Dist.publish-public
@@ -51,9 +51,9 @@ Build.on \built ->
   Dist.prepare!
   err <- Test.run
   return if err
-  Run.recycle-site!
+  Run.recycle-app!
 Build.start!
-Run.recycle-site!
+Run.recycle-app!
 
 _.delay show-help, 500ms
 _.delay (-> rl.prompt!), 750ms

@@ -1,6 +1,6 @@
 name       : \awtrig
 version    : \0.1.0
-description: "Run shell commands when the active window changes"
+description: "Run shell commands when the active window focus changes"
 keywords   : <[ command exec focus shell X11 ]>
 homepage   : \https://github.com/dizzib/awtrig
 bugs       : \https://github.com/dizzib/awtrig/issues

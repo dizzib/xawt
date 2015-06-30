@@ -7,14 +7,14 @@ Const = require \./constants
 G     = require \./growl
 
 module.exports =
-  recycle-site: ->
-    <- stop-site!
-    <- start-site!
+  recycle-app: ->
+    <- stop-app!
+    <- start-app!
 
 ## helpers
 
-function get-start-site-args
-  "server -v 1 #{Args.app-dirs * ' '}".trim!
+function get-start-app-args
+  "trigger #{Args.app-dirs * ' '}".trim!
 
 function kill-node args, cb
   # can't use WaitFor as we need the return code
@@ -26,13 +26,13 @@ function kill-node args, cb
   throw new Error "#cmd returned #code" if code > 1
   cb!
 
-function start-site cb
+function start-app cb
   const RX-ERR = /(expected|error|exception)/i
   v = exec 'node --version', silent:true .output.replace '\n' ''
-  cwd = Const.dir.build.DIST
-  args = get-start-site-args!
-  log "start site in node #v: #args"
-  return log "unable to start non-existent site at #cwd" unless test \-e cwd
+  cwd = Const.dir.build.APP
+  args = get-start-app-args!
+  log "start app in node #v: #args"
+  return log "unable to start non-existent app at #cwd" unless test \-e cwd
   Cp.spawn \node, (args.split ' '), cwd:cwd, env:env <<< NODE_ENV:\development
     ..stderr.on \data ->
       log-data s = it.toString!
@@ -45,8 +45,8 @@ function start-site cb
   function log-data
     log Chalk.gray "#{Chalk.underline Const.APPNAME} #{it.slice 0, -1}"
 
-function stop-site cb
-  args = get-start-site-args!
-  log "stop site: #args"
+function stop-app cb
+  args = get-start-app-args!
+  log "stop app: #args"
   <- kill-node args
   cb!

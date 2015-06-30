@@ -68,8 +68,7 @@ module.exports = me = (new Emitter!) with
 function compile t, ipath, cb
   Assert.equal pwd!, Dir.BUILD
   ipath-abs = Path.resolve Dir.ROOT, ipath
-  odir = Path.dirname opath = get-opath t, ipath
-  mkdir \-p odir # stylus fails if outdir doesn't exist
+  mkdir \-p odir = Path.dirname opath = get-opath t, ipath
   switch typeof t.cmd
   | \string =>
     cmd = t.cmd.replace(\$IN "'#ipath-abs'").replace \$OUT "'#odir'"
@@ -106,7 +105,7 @@ function start-watching tid
   log "start watching #tid"
   Assert.equal pwd!, Dir.ROOT
   pat = (t = tasks[tid]).pat or "*.#{t.ixt}"
-  dirs = "#{Dirname.DIST},#{Dirname.TASK},#{Dirname.TEST}"
+  dirs = "#{Dirname.APP},#{Dirname.TASK},#{Dirname.TEST}"
   w = t.watcher = Choki.watch [ "{#dirs}/**/#pat" pat ],
     cwd:Dir.ROOT
     ignoreInitial:true
