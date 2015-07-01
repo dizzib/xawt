@@ -1,14 +1,19 @@
-Evem    = require \events .EventEmitter
-Proxreq = require \proxyquire
+global.log = console.log
 
 A = require \chai .assert
-T = Proxreq \../app/trigger do
-  \child_process       : exec: -> out.push it
-  \./args              : init: -> config-path:\./config.yaml debug:0
-  \./x11-active-window : xaw = (new Evem!) with do
-    init: -> it!
+E = require \events .EventEmitter
+M = require \mockery
+  ..registerMock \child_process exec: -> out.push it
+  ..registerMock \./args config-path:\./config.yaml debug:0
+  ..registerMock \./x11-active-window xaw = (new E!) with do
+    init   : -> it!
+    current: {}
+  ..enable warnOnUnregistered:false
+T = require \../app/trigger
 
 test = it
+<- describe 'trigger'
+
 out  = []
 
 beforeEach ->

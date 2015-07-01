@@ -28,5 +28,5 @@ devDependencies:
   gntp       : \~0.1.1
   marked     : \~0.3.3
   mocha      : \~2.2.5
-  proxyquire : \~1.5.0
+  mockery    : \~1.4.0
   'wait.for' : \~0.6.3

@@ -1,5 +1,0 @@
-/foo/:
-  enter:
-    cmd 1
-  exit:
-    cmd 2

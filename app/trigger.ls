@@ -1,10 +1,10 @@
-Args = require \./args .init!
-
 global.log = console.log
+Args = require \./args
 global.log.debug = if Args.debug then console.log else ->
 
-Cp  = require \child_process
-Xaw = require \./x11-active-window
+Cp   = require \child_process
+Cfg  = require \./config
+Xaw  = require \./x11-active-window
 
 err, info <- Xaw.init
 return log err if err

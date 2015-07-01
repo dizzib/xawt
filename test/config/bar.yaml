@@ -1,0 +1,5 @@
+/bar/:
+  in : com -1
+
+/baz/:
+  out: com -2
