@@ -58,7 +58,6 @@ test 'key not regex' ->
   A.instanceOf e, Error
 
 function assert-bar
-  log \assert-bar
   cfg = T.get!
   A.lengthOf _.keys(cfg), 2
   A.equal 'com -1' cfg[/bar/].in
