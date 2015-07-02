@@ -1,3 +1,5 @@
+test = it
+<- describe 'config'
 global.log = console.log
 
 A = require \chai .assert
@@ -5,18 +7,17 @@ S = require \shelljs/global
 Y = require \js-yaml
 _ = require \lodash
 M = require \mockery
-  ..registerMock \./args args = config-path:\/tmp/awtrig-config.yaml debug:0
-  ..enable warnOnUnregistered:false
-T = require \../app/config
 
-const FOO = \./test/config/foo.yaml
-const BAR = \./test/config/bar.yaml
+var args, T
 
-test = it
-<- describe 'config'
-
-beforeEach ->
-  rm \-f args.config-path
+after ->
+  M.deregisterAll!
+  M.disable!
+before ->
+  global.log.debug = if 0 then console.log else ->
+  M.enable warnOnUnregistered:false
+  M.registerMock \./args args := config-path:\/tmp/awtrig-config.yaml
+  T := require \../app/config
 
 test 'load foo' ->
   prepare \foo
@@ -28,7 +29,7 @@ test 'load bar' ->
   T.load!
   assert-bar!
 
-test 'updating file should auto-reload' (done) ->
+test 'updated file should auto-reload' (done) ->
   prepare \foo
   T.load!
   assert-foo!
@@ -39,6 +40,7 @@ test 'updating file should auto-reload' (done) ->
   ,5
 
 test 'missing file' ->
+  rm \-f args.config-path
   try T.load!
   catch e
   A.instanceOf e, Error

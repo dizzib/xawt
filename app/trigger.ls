@@ -3,7 +3,7 @@ Args = require \./args
 global.log.debug = if Args.debug then console.log else ->
 
 Cp   = require \child_process
-Cfg  = require \./config
+Cmd  = require \./command
 Xaw  = require \./x11-active-window
 
 err, info <- Xaw.init

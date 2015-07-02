@@ -20,4 +20,5 @@ module.exports = me =
       A arr.1.length
       rx = new RegExp arr.1
       cache[rx] = v
-    fsw := Fs.watch path, me.load
+    fsw := Fs.watch path, (ev, fname) ->
+      me.load! if ev is \change

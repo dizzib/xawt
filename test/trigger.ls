@@ -1,20 +1,26 @@
+test = it
+<- describe 'trigger'
 global.log = console.log
 
 A = require \chai .assert
 E = require \events .EventEmitter
 M = require \mockery
-  ..registerMock \child_process exec: -> out.push it
-  ..registerMock \./args config-path:\./config.yaml debug:0
-  ..registerMock \./x11-active-window xaw = (new E!) with do
+
+var out, T
+var cmd, xaw
+
+after ->
+  M.deregisterAll!
+  M.disable!
+before ->
+  M.enable warnOnUnregistered:false
+  M.registerMock \child_process exec: -> out.push it
+  M.registerMock \./args debug:1
+  M.registerMock \./command cmd := {}
+  M.registerMock \./x11-active-window xaw := (new E!) with do
     init   : -> it!
     current: {}
-  ..enable warnOnUnregistered:false
-T = require \../app/trigger
-
-test = it
-<- describe 'trigger'
-
-out  = []
+  T := require \../app/trigger
 
 beforeEach ->
   out := []
