@@ -41,9 +41,8 @@ test 'updated file should auto-reload' (done) ->
 
 test 'missing file' ->
   rm \-f args.config-path
-  try T.load!
-  catch e
-  A.instanceOf e, Error
+  T.load!
+  A.isNull T.get!
 
 test 'malformed yaml' ->
   prepare \malformed

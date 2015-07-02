@@ -13,21 +13,22 @@ after ->
 before ->
   global.log.debug = if 0 then console.log else ->
   M.enable warnOnUnregistered:false
-  M.registerMock \./config cfg := get: ->
-    a:
-      rx : /a/
-      in : 'a.in'
-      out: 'a.out'
-    b:
-      rx : /b/
-      in : 'b.in'
-    c:
-      rx : /c/
-      out: 'c.out'
-    captures:
-      rx : /(hi|good) (\w+)/
-      in : '@1 @2 ann'
-      out: '@1 @2 bob'
+  M.registerMock \./config cfg := do
+    get: ->
+      a:
+        rx : /a/
+        in : 'a.in'
+        out: 'a.out'
+      b:
+        rx : /b/
+        in : 'b.in'
+      c:
+        rx : /c/
+        out: 'c.out'
+      captures:
+        rx : /(hi|good) (\w+)/
+        in : '@1 @2 ann'
+        out: '@1 @2 bob'
   T := require \../app/command
 
 describe 'simple' ->

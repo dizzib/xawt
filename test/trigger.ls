@@ -7,7 +7,7 @@ E = require \events .EventEmitter
 M = require \mockery
 
 var out, T
-var cmd, xaw
+var cmd, cfg, xaw
 
 after ->
   M.deregisterAll!
@@ -15,18 +15,29 @@ after ->
 before ->
   M.enable warnOnUnregistered:false
   M.registerMock \child_process exec: -> out.push it
-  M.registerMock \./args debug:1
-  M.registerMock \./command cmd := {}
-  M.registerMock \./x11-active-window xaw := (new E!) with do
-    init   : -> it!
-    current: {}
-  T := require \../app/trigger
-
+  M.registerMock \./args debug:0
+  M.registerMock \./command cmd := find: ({title}, dirn) -> ["#dirn -#c" for c in title]
+  M.registerMock \./config cfg := load: -> cfg
+  M.registerMock \./x11-active-window xaw := (new E!)
 beforeEach ->
   out := []
-  xaw.removeAllListeners!current.title = ''
 
-test 'focus' ->
-  assert ''
+test 'bail if no config' ->
+  cfg.get = -> null
+  xaw.init = A.fail
+  T = require \../app/trigger
 
-function assert then A.equal it, out * ';'
+run 'a'  ''   'out -a'
+run ''   'b'  'in -b'
+run 'a'  'b'  'out -a;in -b'
+run 'aA' 'bB' 'out -a;out -A;in -b;in -B'
+
+function run pre, cur, expect
+  test "#pre --> #cur" ->
+    cfg.get = -> {}
+    xaw.init = (cb) -> cb!
+    T = require \../app/trigger
+    xaw.current = title:cur
+    xaw.previous = title:pre
+    xaw.emit \changed
+    A.equal expect, out * ';'

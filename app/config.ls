@@ -10,10 +10,14 @@ module.exports = me =
   get : -> cache
   load: ->
     log.debug "load config from #{path = Args.config-path}"
-    cache := {}
-    throw new Error "MISSING #path" unless test \-e path
+    cache := null
+    unless test \-e path
+      log """Unable to find configuration file #path.
+        Please ensure this path is correct and the file exists."""
+      return me
     fsw?close!
     cfg = Yaml.safeLoad Fs.readFileSync path
+    cache := {}
     for k, v of cfg
       arr = k.split '/'
       A arr.0.length is 0, 'key must be a regular expression'
@@ -22,3 +26,4 @@ module.exports = me =
       cache[rx] = v
     fsw := Fs.watch path, (ev, fname) ->
       me.load! if ev is \change
+    me
