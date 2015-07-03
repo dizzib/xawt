@@ -13,7 +13,7 @@ after ->
   M.deregisterAll!
   M.disable!
 before ->
-  M.enable warnOnUnregistered:false
+  M.enable warnOnUnregistered:false useCleanCache:true
   M.registerMock \child_process exec: -> out.push it
   M.registerMock \./args debug:0
   M.registerMock \./command cmd := find: ({title}, dirn) -> ["#dirn -#c" for c in title]
@@ -21,12 +21,15 @@ before ->
   M.registerMock \./x11-active-window xaw := (new E!)
 beforeEach ->
   out := []
+  xaw.removeAllListeners!
+  M.resetCache!
 
-test 'bail if no config' ->
+test 'bail if missing config' ->
   cfg.get = -> null
   xaw.init = A.fail
   T = require \../app/trigger
 
+run ''   ''   ''
 run 'a'  ''   'out -a'
 run ''   'b'  'in -b'
 run 'a'  'b'  'out -a;in -b'
@@ -37,6 +40,7 @@ function run pre, cur, expect
     cfg.get = -> {}
     xaw.init = (cb) -> cb!
     T = require \../app/trigger
+
     xaw.current = title:cur
     xaw.previous = title:pre
     xaw.emit \changed
