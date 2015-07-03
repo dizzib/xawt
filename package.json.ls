@@ -16,7 +16,6 @@ engines:
 dependencies:
   commander  : \2.6.0
   'js-yaml'  : \3.2.5
-  livescript : \1.4.0
   lodash     : \3.5.0
   shelljs    : \0.3.0
   x11        : \1.0.3
@@ -26,6 +25,7 @@ devDependencies:
   chokidar   : \~1.0.1
   cron       : \~1.0.3
   gntp       : \~0.1.1
+  livescript : \~1.4.0
   marked     : \~0.3.3
   mocha      : \~2.2.5
   mockery    : \~1.4.0
