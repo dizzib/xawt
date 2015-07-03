@@ -19,7 +19,8 @@ Xaw.on \changed ->
 
 function run-commands cmds
   for c in cmds
-    log.debug \exec c
+    if Args.dry-run then return log \dry-run c
+    log.debug c
     err, stdout, stderr <- Cp.exec c
     log err if err
     log stdout

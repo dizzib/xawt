@@ -9,6 +9,7 @@ config-path = "#config-home/awtrig.yaml"
 C.version J.version
 C.usage '[Options]'
 C.option '-c, --config-path [path]' "path to configuration file (default:#config-path)", config-path
+C.option '-d, --dry-run' 'bypass command execute'
 C.option '-v, --verbose' 'emit detailed trace for debugging'
 C.parse process.argv
 
