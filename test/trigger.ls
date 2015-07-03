@@ -15,7 +15,7 @@ after ->
 before ->
   M.enable warnOnUnregistered:false useCleanCache:true
   M.registerMock \child_process exec: -> out.push it
-  M.registerMock \./args debug:0
+  M.registerMock \./args verbose:0
   M.registerMock \./command cmd := find: ({title}, dirn) -> ["#dirn -#c" for c in title]
   M.registerMock \./config cfg := load: -> cfg
   M.registerMock \./x11-active-window xaw := (new E!)

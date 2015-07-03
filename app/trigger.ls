@@ -1,6 +1,6 @@
 global.log = console.log
 Args = require \./args
-global.log.debug = if Args.debug then console.log else ->
+global.log.debug = if Args.verbose then console.log else ->
 
 Cp  = require \child_process
 Cmd = require \./command
