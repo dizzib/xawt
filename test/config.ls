@@ -16,7 +16,7 @@ after ->
 before ->
   global.log.debug = if 0 then console.log else ->
   M.enable warnOnUnregistered:false
-  M.registerMock \./args args := config-path:\/tmp/awtrig-config.yaml
+  M.registerMock \./args args := config-path:\/tmp/xawt-config.yaml
   T := require \../app/config
 beforeEach ->
   T.reset!

@@ -21,7 +21,7 @@ dir =
   TEST : "#root/#{DIRNAME.TEST}"
 
 module.exports =
-  APPNAME: \awtrig
+  APPNAME: \xawt
   dirname: DIRNAME
   dir    : dir
 

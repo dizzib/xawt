@@ -1,15 +1,15 @@
-name       : \awtrig
+name       : \xawt
 version    : \0.1.0
 description: "Run shell commands when the active window focus changes"
-keywords   : <[ command exec focus shell X11 ]>
-homepage   : \https://github.com/dizzib/awtrig
-bugs       : \https://github.com/dizzib/awtrig/issues
+keywords   : <[ command exec focus shell trigger X11 ]>
+homepage   : \https://github.com/dizzib/xawt
+bugs       : \https://github.com/dizzib/xawt/issues
 license:   : \MIT
 author     : \dizzib
-bin        : \./bin/awtrig
+bin        : \./bin/xawt
 repository :
   type: \git
-  url : \https://github.com/dizzib/awtrig
+  url : \https://github.com/dizzib/xawt
 engines:
   node: '>=0.10.x'
   npm : '>=1.0.x'
