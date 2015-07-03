@@ -21,10 +21,11 @@ module.exports = me =
       arr = k.split '/'
       A arr.0.length is 0, 'key must be a regular expression'
       A arr.1.length
-      rx = new RegExp arr.1
-      cache[rx] = v
+      cache[k] = v <<< rx:new RegExp arr.1
     fsw := Fs.watch path, (ev, fname) ->
-      me.load! if ev is \change
+      return unless ev is \change
+      log "Reload #path"
+      me.load!
     me
   reset: -> # for tests
     fsw?close!

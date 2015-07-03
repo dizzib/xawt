@@ -11,10 +11,7 @@ module.exports =
     <- stop-app!
     <- start-app!
 
-## helpers
-
-function get-start-app-args
-  "trigger #{Args.app-dirs * ' '}".trim!
+const RUNCMD = 'trigger -d -v'
 
 function kill-node args, cb
   # can't use WaitFor as we need the return code
@@ -30,10 +27,9 @@ function start-app cb
   const RX-ERR = /(expected|error|exception)/i
   v = exec 'node --version', silent:true .output.replace '\n' ''
   cwd = Const.dir.build.APP
-  args = get-start-app-args!
-  log "start app in node #v: #args"
+  log "start app in node #v: #RUNCMD"
   return log "unable to start non-existent app at #cwd" unless test \-e cwd
-  Cp.spawn \node, (args.split ' '), cwd:cwd, env:env <<< NODE_ENV:\development
+  Cp.spawn \node, (RUNCMD.split ' '), cwd:cwd, env:env <<< NODE_ENV:\development
     ..stderr.on \data ->
       log-data s = it.toString!
       # data may be fragmented, so only growl relevant packet
@@ -46,7 +42,6 @@ function start-app cb
     log Chalk.gray "#{Chalk.underline Const.APPNAME} #{it.slice 0, -1}"
 
 function stop-app cb
-  args = get-start-app-args!
-  log "stop app: #args"
-  <- kill-node args
+  log "stop app: #RUNCMD"
+  <- kill-node RUNCMD
   cb!

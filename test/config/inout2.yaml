@@ -1,0 +1,5 @@
+/in/:
+  in : cmd -in
+
+/out/:
+  out: cmd -out

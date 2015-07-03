@@ -21,30 +21,43 @@ before ->
 beforeEach ->
   T.reset!
 
-test 'load foo' ->
-  prepare \foo
-  T.load!
-  assert-foo!
+deq = A.deepEqual
 
-test 'load bar' ->
-  prepare \bar
-  T.load!
-  assert-bar!
-
-test 'updated file should auto-reload' (done) ->
-  prepare \foo
-  T.load!
-  assert-foo!
-  prepare \bar
-  setTimeout ->
-    assert-bar!
-    done!
-  ,5
-
-test 'missing file' ->
+test 'missing' ->
   rm \-f args.config-path
   T.load!
   A.isNull T.get!
+
+test 'empty' ->
+  prepare \empty
+  deq T.load!get!, {}
+
+test 'in' ->
+  prepare \in
+  deq T.load!get!, '/in/': rx:/in/ in:'cmd -in'
+
+test 'out' ->
+  prepare \out
+  deq T.load!get!, '/out/': rx:/out/ out:'cmd -out'
+
+test 'in out 1' ->
+  prepare \inout1
+  deq T.load!get!, '/inout/': rx:/inout/ in:'cmd -in' out:'cmd -out'
+
+test 'in out 2' ->
+  prepare \inout2
+  deq T.load!get!, do
+    '/in/' : rx:/in/ in:'cmd -in'
+    '/out/': rx:/out/ out:'cmd -out'
+
+test 'updated file should auto-reload' (done) ->
+  prepare \in
+  deq T.load!get!, '/in/': rx:/in/ in:'cmd -in'
+  prepare \out
+  setTimeout ->
+    deq T.load!get!, '/out/': rx:/out/ out:'cmd -out'
+    done!
+  ,5
 
 test 'malformed yaml' ->
   prepare \malformed
@@ -57,18 +70,6 @@ test 'key not regex' ->
   try T.load!
   catch e
   A.instanceOf e, Error
-
-function assert-bar
-  cfg = T.get!
-  A.lengthOf _.keys(cfg), 2
-  A.equal 'com -1' cfg[/bar/].in
-  A.equal 'com -2' cfg[/baz/].out
-
-function assert-foo
-  cfg = T.get!
-  A.lengthOf _.keys(cfg), 1
-  A.equal 'cmd -in' cfg[/foo/].in
-  A.equal 'cmd -out' cfg[/foo/].out
 
 function prepare
   cp \-f "./test/config/#it.yaml" args.config-path

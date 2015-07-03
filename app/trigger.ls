@@ -23,5 +23,5 @@ function run-commands cmds
     log.debug c
     err, stdout, stderr <- Cp.exec c
     log err if err
-    log stdout
-    log stderr
+    log stdout if stdout.length
+    log stderr if stderr.length
