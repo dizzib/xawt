@@ -9,13 +9,12 @@ var cache, fsw
 module.exports = me =
   get : -> cache
   load: ->
+    me.reset!
     log.debug "load config from #{path = Args.config-path}"
-    cache := null
     unless test \-e path
       log """Unable to find configuration file #path.
         Please ensure this path is correct and the file exists."""
       return me
-    fsw?close!
     cfg = Yaml.safeLoad Fs.readFileSync path
     cache := {}
     for k, v of cfg
@@ -27,3 +26,6 @@ module.exports = me =
     fsw := Fs.watch path, (ev, fname) ->
       me.load! if ev is \change
     me
+  reset: -> # for tests
+    fsw?close!
+    cache := null

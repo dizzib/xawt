@@ -18,6 +18,8 @@ before ->
   M.enable warnOnUnregistered:false
   M.registerMock \./args args := config-path:\/tmp/awtrig-config.yaml
   T := require \../app/config
+beforeEach ->
+  T.reset!
 
 test 'load foo' ->
   prepare \foo
