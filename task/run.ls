@@ -11,7 +11,7 @@ module.exports =
     <- stop-app!
     <- start-app!
 
-const RUNCMD = 'trigger -d -v'
+const RUNCMD = 'trigger -d'
 
 function kill-node args, cb
   # can't use WaitFor as we need the return code
