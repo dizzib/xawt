@@ -10,9 +10,6 @@ bin        : \./bin/xawt
 repository :
   type: \git
   url : \https://github.com/dizzib/xawt
-engines:
-  node: '>=0.10.x'
-  npm : '>=1.0.x'
 dependencies:
   commander  : \2.6.0
   'js-yaml'  : \3.2.5
@@ -30,3 +27,7 @@ devDependencies:
   mocha      : \~2.2.5
   mockery    : \~1.4.0
   'wait.for' : \~0.6.3
+engines:
+  node: '>=0.10.x'
+  npm : '>=1.0.x'
+preferGlobal: true
