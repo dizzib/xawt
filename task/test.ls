@@ -7,7 +7,7 @@ G     = require \./growl
 module.exports.run = (cb) ->
   v = exec 'node --version' silent:true .output - '\n'
   log "run mocha in node #v"
-  cmd = "#{Dir.BUILD}/node_modules/mocha/bin/mocha"
+  cmd = "#{Dir.ROOT}/node_modules/.bin/mocha"
   args = "--reporter spec --bail --colors test/**/*.js" / ' '
   output = ''
   Cp.spawn cmd, args, cwd:Dir.BUILD, stdio:[ 0, void, 2 ]

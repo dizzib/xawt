@@ -13,12 +13,10 @@ Dir     = require \./constants .dir
 Dirname = require \./constants .dirname
 G       = require \./growl
 
-const NMODULES = './node_modules'
-
 pruner = new Cron.CronJob cronTime:'*/10 * * * *' onTick:prune-empty-dirs
 tasks  =
   livescript:
-    cmd   : "#NMODULES/livescript/bin/lsc --output $OUT $IN"
+    cmd   : "#{Dir.ROOT}/node_modules/.bin/lsc --output $OUT $IN"
     ixt   : \ls
     oxt   : \js
     xsub  : 'json.js->json'

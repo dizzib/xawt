@@ -6,7 +6,6 @@ lsc -o $BLD/task -c task/*.ls
 lsc -o $BLD -c package.json.ls
 
 # npm dependencies
-cd $BLD
 npm prune
 npm install
 
