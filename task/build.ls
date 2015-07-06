@@ -38,17 +38,6 @@ module.exports = me = (new Emitter!) with
     Assert.equal pwd!, Dir.BUILD
     W4 exec, "bash -O extglob -O dotglob -c 'rm -rf !(node_modules|task)'"
 
-  delete-modules: ->
-    log "delete-modules #{pwd!}"
-    Assert.equal pwd!, Dir.BUILD
-    rm '-rf' "./node_modules"
-
-  refresh-modules: ->
-    Assert.equal pwd!, Dir.BUILD
-    W4 exec, 'npm -v'
-    W4 exec, 'npm prune'
-    W4 exec, 'npm install'
-
   start: ->
     G.say 'build started'
     try
