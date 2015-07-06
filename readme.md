@@ -1,6 +1,5 @@
-## xawt
-
-X11 active window trigger:
+## xawt - X11 active window trigger
+[![Build Status](https://travis-ci.org/dizzib/xawt.svg?branch=master)](https://travis-ci.org/dizzib/xawt)
 
 - run shell commands when a window receives or loses focus.
 
