@@ -32,12 +32,11 @@ This path can be overridden with the `-c` flag on the command line.
 
 ## developer build and run
 
-    $ sudo npm install -g livescript  # ensure livescript is installed globally
     $ git clone --branch=dev https://github.com/dizzib/xawt.git
     $ cd xawt
-    $ ./task/bootstrap                # compile the task runner and install dependencies
-    $ node _build/task/repl           # launch the task runner
-    xawt > b.a                        # build all and run
+    $ npm install               # install dependencies
+    $ npm start                 # start the task runner
+    xawt > b.a                  # build all and run
 
 ## license
 

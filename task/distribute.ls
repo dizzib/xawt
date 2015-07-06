@@ -6,8 +6,9 @@ Dir    = require \./constants .dir
 
 module.exports =
   prepare: ->
-    cp \-f "#{Dir.BUILD}/package.json" Dir.ROOT
-    cp \-f "#{Dir.BUILD}/package.json" Dir.build.APP
+    if test \-e pjson = "#{Dir.BUILD}/package.json"
+      cp \-f pjson, Dir.ROOT
+      cp \-f pjson, Dir.build.APP
     cp \-f "#{Dir.ROOT}/readme.md" Dir.build.APP
 
   publish-local: ->

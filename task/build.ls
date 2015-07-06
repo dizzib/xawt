@@ -26,15 +26,12 @@ tasks  =
 
 module.exports = me = (new Emitter!) with
   all: ->
-    try
-      for tid of tasks then compile-batch tid
-      me.emit \built
-    catch e then G.err e
+    for tid of tasks then compile-batch tid
+    me.emit \built
 
   delete-files: ->
-    log "delete-files #{pwd!}"
-    Assert.equal pwd!, Dir.BUILD
-    W4 exec, "bash -O extglob -O dotglob -c 'rm -rf !(node_modules|task)'"
+    log "delete #{Dir.BUILD}"
+    rm \-rf Dir.BUILD
 
   start: ->
     G.say 'build started'
@@ -97,6 +94,7 @@ function start-watching tid
     cwd:Dir.ROOT
     ignoreInitial:true
     ignored:t.ignore
+    persistent: false
   w.on \all _.debounce process, 500ms, leading:true trailing:false
 
   function process act, ipath

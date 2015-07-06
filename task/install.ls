@@ -7,7 +7,7 @@ module.exports =
   delete-modules: ->
     dir = "#{Dir.ROOT}/node_modules"
     log "delete #dir"
-    rm '-rf' dir
+    rm \-rf dir
 
   refresh-modules: ->
     pushd Dir.ROOT
