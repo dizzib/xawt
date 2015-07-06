@@ -4,17 +4,20 @@ Shell = require \shelljs/global
 Dir   = require \./constants .dir
 G     = require \./growl
 
-const CMD  = "#{Dir.ROOT}/node_modules/.bin/mocha"
-const ARGS = '--reporter spec --bail --colors test/**/*.js'
+const DIRBIN = "#{Dir.ROOT}/node_modules/.bin"
+const ISTANB = "#DIRBIN/istanbul"
+const I-ARGS = "cover #DIRBIN/_mocha"
+const M-ARGS = '--reporter spec --bail --colors test/**/*.js'
 
 module.exports =
   exec: ->
-    exec "#CMD #ARGS"
+    exec "#ISTANB #I-ARGS -- #M-ARGS"
   run: (cb) ->
     v = exec 'node --version' silent:true .output - '\n'
-    log "run mocha in node #v"
+    log "run tests in node #v"
+    args = "#I-ARGS -- #M-ARGS" / ' '
     output = ''
-    Cp.spawn CMD, (ARGS / ' '), cwd:Dir.BUILD, stdio:[ 0, void, 2 ]
+    Cp.spawn ISTANB, args, cwd:Dir.BUILD, stdio:[ 0, void, 2 ]
       ..on \exit ->
         tail = output.slice -500
         G.ok "All tests passed\n\n#tail" nolog:true unless it

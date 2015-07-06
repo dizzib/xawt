@@ -25,6 +25,7 @@ devDependencies:
   chokidar   : \~1.0.1
   cron       : \~1.0.3
   gntp       : \~0.1.1
+  istanbul   : \~0.3.13
   livescript : \~1.4.0
   marked     : \~0.3.3
   mocha      : \~2.2.5
