@@ -7,7 +7,7 @@
 
 With [node.js] installed on the target [X11] box:
 
-    $ sudo npm install -g xawt
+    $ npm install -g xawt            # might need to prefix with sudo
     $ xawt
 
 ## configure
@@ -25,7 +25,7 @@ This path can be overridden with the `-c` flag on the command line.
 
       -h, --help                output usage information
       -V, --version             output the version number
-      -c, --config-path [path]  path to configuration file (default:/home/andy/.config/xawt.yaml)
+      -c, --config-path [path]  path to configuration file (default:~/.config/xawt.yaml)
       -d, --dry-run             bypass command execute
       -v, --verbose             emit detailed trace for debugging
 
@@ -33,9 +33,9 @@ This path can be overridden with the `-c` flag on the command line.
 
     $ git clone --branch=dev https://github.com/dizzib/xawt.git
     $ cd xawt
-    $ npm install               # install dependencies
-    $ npm start                 # start the task runner
-    xawt > b.a                  # build all and run
+    $ npm install     # install dependencies
+    $ npm start       # start the task runner
+    xawt > b.a        # build all and run
 
 ## license
 
