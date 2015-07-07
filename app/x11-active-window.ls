@@ -5,18 +5,19 @@ var root, x
 
 module.exports = me = (new Evem!) with do
   init: (cb) ->
+    me.removeAllListeners!
     err, disp <- X11.createClient
     return cb err if err
     root := disp.screen.0.root
     x    := disp.client .on \error -> log \error it
-    me.removeAllListeners!
-    err, atom <- x.InternAtom false \_NET_ACTIVE_WINDOW
+    err <- x.InternAtom false \_NET_ACTIVE_WINDOW
     return cb wrap-err "x.InternAtom _NET_ACTIVE_WINDOW failed" err if err
     x.ChangeWindowAttributes root, eventMask:X11.eventMask.PropertyChange
     x.on \event ->
       return unless it.atom is x.atoms._NET_ACTIVE_WINDOW
       err, current <- read-active-window-title
       return log err if err
+      log 'foo' err, current
       return unless current?
       return if current.wid is me.current.wid # workaround duplicate events race
       me.previous = me.current

@@ -19,7 +19,7 @@ module.exports =
     output = ''
     Cp.spawn ISTANB, args, cwd:Dir.BUILD, stdio:[ 0, void, 2 ]
       ..on \exit ->
-        tail = output.slice -500
+        tail = output.slice -750
         G.ok "All tests passed\n\n#tail" nolog:true unless it
         G.alert "Tests failed (code=#it)\n\n#tail" nolog:true if it
         return unless _.isFunction cb
