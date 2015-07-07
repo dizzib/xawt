@@ -13,5 +13,5 @@ _.delay run, 1000 # give chokidar time to build its _watched
 function run
   <- WFib
   Build.all!
-  Test.exec!
   Build.stop!
+  Test.exec!
