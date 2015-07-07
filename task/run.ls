@@ -14,7 +14,6 @@ module.exports = me =
     log err if err
     err <- me.start
     log err if err
-
   start: (cb) ->
     const RX-ERR = /(expected|error|exception)/i
     v = exec 'node --version', silent:true .output.replace '\n' ''
@@ -29,7 +28,6 @@ module.exports = me =
       ..stdout.on \data ->
         log-data it.toString!
         cb! if /listening on port/.test it
-
   stop: (cb) ->
     log "stop app: #RUNCMD"
     kill-node RUNCMD, cb
