@@ -14,4 +14,5 @@ function run
   <- WFib
   Build.all!
   Build.stop!
-  Test.exec!
+  res = Test.exec!
+  process.exit res.code
