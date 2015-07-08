@@ -11,7 +11,7 @@ const M-ARGS = '--reporter spec --bail --colors test/**/*.js'
 
 module.exports =
   exec: ->
-    exec "#ISTANB #I-ARGS -- #M-ARGS"
+    exec "#ISTANB #I-ARGS -- --timeout 5000 #M-ARGS"
   run: (cb) ->
     v = exec 'node --version' silent:true .output - '\n'
     log "run tests in node #v"
