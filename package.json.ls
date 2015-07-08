@@ -14,6 +14,7 @@ scripts:
   start    : './task/bootstrap && node ./_build/task/repl'
   test     : './task/bootstrap && node ./_build/task/npm-test'
 dependencies:
+  async      : \1.3.0
   commander  : \2.6.0
   'js-yaml'  : \3.2.5
   lodash     : \3.5.0

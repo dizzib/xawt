@@ -15,8 +15,8 @@ return log err if err
 
 Xaw.on \changed ->
   log.debug \changed Xaw
-  run-commands Cmd.find Xaw.previous, \out
-  run-commands Cmd.find Xaw.current, \in
+  run-commands Cmd.find it.previous, \out
+  run-commands Cmd.find it.current, \in
 
 function run-commands cmds
   for c in cmds

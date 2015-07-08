@@ -45,8 +45,7 @@ function run pre, cur, expect, opts = dry-run:false
     xaw.init = (cb) -> cb!
     args <<< opts
     T = require \../app/trigger
-
-    xaw.current = title:cur
-    xaw.previous = title:pre
-    xaw.emit \changed
+    xaw.emit \changed do
+      current : title:cur
+      previous: title:pre
     A.equal expect, out * ';'
