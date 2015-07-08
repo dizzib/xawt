@@ -17,13 +17,13 @@ module.exports = me = (new Evem!) with do
       return unless it.atom is x.atoms._NET_ACTIVE_WINDOW
       err, current <- read-active-window-title
       return log err if err
-      log 'foo' err, current
       return unless current?
       return if current.wid is me.current.wid # workaround duplicate events race
       me.previous = me.current
       me.current = current
       me.emit \changed
-    read-active-window-title cb
+    err, me.current <- read-active-window-title
+    cb ...
   current : title:'' wid:0
   previous: title:'' wid:0
 
