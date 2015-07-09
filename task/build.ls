@@ -22,7 +22,7 @@ tasks  =
     xsub  : 'json.js->json'
   static:
     cmd : 'cp --target-directory $OUT $IN'
-    pat : '{xawt,*.{js,md,yaml}}'
+    pat : '{xawt,*.{js,md,yml}}'
 
 module.exports = me = (new Emitter!) with
   all: ->

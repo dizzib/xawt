@@ -4,7 +4,7 @@ P = require \path
 J = require \./package.json
 
 config-home = process.env.XDG_CONFIG_HOME or P.join process.env.HOME, \.config
-config-path = "#config-home/xawt.yaml"
+config-path = "#config-home/xawt.yml"
 
 C.version J.version
 C.usage '[Options]'

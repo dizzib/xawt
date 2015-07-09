@@ -16,7 +16,7 @@ after ->
 before ->
   global.log.debug = if 0 then console.log else ->
   M.enable warnOnUnregistered:false
-  M.registerMock \./args args := config-path:\/tmp/xawt-config.yaml
+  M.registerMock \./args args := config-path:\/tmp/xawt-config.yml
   T := require \../app/config
 beforeEach ->
   T.reset!
@@ -72,4 +72,4 @@ test 'key not regex' ->
   A.instanceOf e, Error
 
 function prepare
-  cp \-f "./test/config/#it.yaml" args.config-path
+  cp \-f "./test/config/#it.yml" args.config-path
