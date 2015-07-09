@@ -31,6 +31,9 @@ before ->
         out: '@1 @2 bob'
   T := require \../app/command
 
+test 'null state' ->
+  A.deepEqual [] T.find null \in
+
 describe 'simple' ->
   run-in  'a'   <[ a.in ]>
   run-in  'b'   <[ b.in ]>
