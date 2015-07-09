@@ -14,7 +14,7 @@ err <- Xaw.init
 return log err if err
 
 Xaw.on \changed ->
-  log.debug \changed Xaw
+  log.debug \changed it
   run-commands Cmd.find it.previous, \out
   run-commands Cmd.find it.current, \in
 
