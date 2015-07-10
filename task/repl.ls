@@ -5,7 +5,7 @@ _      = require \lodash
 Rl     = require \readline
 Shell  = require \shelljs/global
 WFib   = require \wait.for .launchFiber
-App    = require \./run
+App    = require \./app
 Args   = require \./args
 Build  = require \./build
 Consts = require \./constants
@@ -22,7 +22,7 @@ const COMMANDS =
   * cmd:'i.r ' level:0 desc:'install - refresh node_modules'  fn:Inst.refresh-modules
   * cmd:'b.a ' level:0 desc:'build   - all'                   fn:build-all
   * cmd:'b.d ' level:0 desc:'build   - delete'                fn:Build.delete-files
-  * cmd:'r   ' level:0 desc:'spp     - recycle'               fn:App.recycle
+  * cmd:'r   ' level:0 desc:'app     - recycle'               fn:App.recycle
   * cmd:'t   ' level:0 desc:'test    - run'                   fn:Test.run
   * cmd:'d.lo' level:1 desc:'distrib - publish to local'      fn:Dist.publish-local
   * cmd:'d.PU' level:2 desc:'distrib - publish to public npm' fn:Dist.publish-public
