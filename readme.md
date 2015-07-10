@@ -15,8 +15,8 @@ You should see `echo` commands run whenever the window focus changes.
 
 ## configure
 
-On its first run xawt copies the [default configuration file] to
-`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `~/.config/xawt.yml`.
+On its first run xawt copies the [default configuration file] to `~/.config/xawt.yml`
+unless you've changed your [$XDG_CONFIG_HOME] variable.
 This [yaml] file contains one or more rules of form:
 
 /*regex*/:
