@@ -11,8 +11,8 @@ repository :
   type: \git
   url : \https://github.com/dizzib/xawt
 scripts:
-  start    : './task/bootstrap && node ./_build/task/repl'
-  test     : './task/bootstrap && node ./_build/task/npm-test'
+  start: './task/bootstrap && node ./_build/task/repl'
+  test : './task/bootstrap && node ./_build/task/npm-test'
 dependencies:
   async      : \1.3.0
   commander  : \2.6.0
