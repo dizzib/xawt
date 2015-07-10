@@ -2,5 +2,5 @@
 
 # example
 /(.*)/:             # regular expression to match any window title
-  in: echo in @1    # run this command when any window receives Focus
-  out: echo out @1  # run this command when any window loses Focus
+  in: echo in $1    # run this command when any window receives Focus
+  out: echo out $1  # run this command when any window loses Focus

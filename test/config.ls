@@ -26,7 +26,7 @@ deq = A.deepEqual
 test 'missing with default config-path should copy default-config.yml' ->
   args.is-default-config-path = true
   rm \-f args.config-path
-  deq T.load!get!, '/(.*)/': rx:/(.*)/ in:'echo in @1' out:'echo out @1'
+  deq T.load!get!, '/(.*)/': rx:/(.*)/ in:'echo in $1' out:'echo out $1'
 
 test 'missing with overridden config-path' ->
   args.is-default-config-path = false

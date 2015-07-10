@@ -25,10 +25,10 @@ before ->
       c:
         rx : /c/
         out: 'c.out'
-      captures:
+      submatch:
         rx : /(hi|good) (\w+)/
-        in : '@1 @2 ann'
-        out: '@1 @2 bob'
+        in : '$1 $2 ann'
+        out: '$1 $2 bob'
   T := require \../app/command
 
 test 'null state' ->
@@ -44,7 +44,7 @@ describe 'simple' ->
   run-out 'c'   <[ c.out ]>
   run-out 'abc' <[ a.out c.out ]>
 
-describe 'capture substitution' ->
+describe 'submatch substitution' ->
   run-in  'hi there' ['hi there ann']
   run-out 'good bye' ['good bye bob']
 

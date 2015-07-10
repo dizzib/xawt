@@ -17,14 +17,14 @@ You should see `echo` commands run whenever the window focus changes.
 
 On its first run xawt copies the [default configuration file] to `~/.config/xawt.yml`
 unless you've changed your [$XDG_CONFIG_HOME] variable.
-This [yaml] file contains one or more rules of form:
+This [yaml] file contains one or more rules:
 
 /*regex*/:
   in: *action*
   out: *action*
 
 * *regex*
-  a [JavaScript] [regular expression]
+  a [JavaScript regular expression]
 * in: *action*
   Do *action* when *regex* matches the title of a window receiving focus (activating).
 * out: *action*
@@ -33,6 +33,9 @@ This [yaml] file contains one or more rules of form:
   Either the shell command to run immediately, or {delay: *delay*, command: *command*}
   to run *command* after *delay* seconds (unless *regex* subsequently matches
   before *command* has run).
+
+Commands can include [parenthesised substring matches] by the `$` symbol where
+`$1` is the first submatch, `$2` the second, etc.
 
 ## options
 
@@ -61,8 +64,8 @@ This [yaml] file contains one or more rules of form:
 
 [$XDG_CONFIG_HOME]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 [default configuration file]: ./app/default-config.yml
-[JavaScript]: https://en.wikipedia.org/wiki/JavaScript
 [node.js]: http://nodejs.org
-[regular expression]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+[parenthesised substring matches]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_parenthesized_substring_matches
+[JavaScript regular expression]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [X11]: https://en.wikipedia.org/wiki/X_Window_System
 [yaml]: https://en.wikipedia.org/wiki/YAML
