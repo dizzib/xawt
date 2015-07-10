@@ -10,11 +10,14 @@ module.exports = me =
   get : -> cache
   load: ->
     me.reset!
-    log.debug "load config from #{path = Args.config-path}"
-    unless test \-e path
-      log """Unable to find configuration file #path.
-        Please ensure this path is correct and the file exists."""
-      return me
+    unless test \-e path = Args.config-path
+      log "Unable to find configuration file #path"
+      unless Args.is-default-config-path
+        log 'Please ensure this path is correct and the file exists.'
+        return me
+      log "Copying default config to #path"
+      cp "#__dirname/default-config.yml" path
+    log.debug "load config from #path"
     cfg = Yaml.safeLoad Fs.readFileSync path
     cache := {}
     for k, v of cfg
