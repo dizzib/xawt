@@ -18,7 +18,8 @@ before ->
     out.push cmd
     cb null \stdout \stderr
   M.registerMock \./args args := verbose:0
-  M.registerMock \./command cmd := find: ({title}, dirn) -> ["#dirn -#c" for c in title]
+  M.registerMock \./command cmd := do
+    find: ({title}, dirn) -> [command:"#dirn -#c" delay:0 for c in title]
   M.registerMock \./config cfg := load: -> cfg
   M.registerMock \./x11-active-window xaw := (new E!)
 beforeEach ->

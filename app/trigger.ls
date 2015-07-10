@@ -14,11 +14,12 @@ return log err if err
 
 Xaw.on \changed ->
   log.debug \changed it
-  run-commands Cmd.find it.previous, \out
-  run-commands Cmd.find it.current, \in
+  do-actions Cmd.find it.previous, \out
+  do-actions Cmd.find it.current, \in
 
-function run-commands cmds
-  for c in cmds
+function do-actions acts
+  for a in acts
+    c = a.command
     if Args.dry-run then return log \dry-run c
     log.debug c
     err, stdout, stderr <- Cp.exec c
