@@ -1,28 +1,38 @@
 ## xawt - X11 active window trigger
 [![Build Status](https://travis-ci.org/dizzib/xawt.svg?branch=master)](https://travis-ci.org/dizzib/xawt)
 
-- run shell commands when a window receives or loses focus.
+* run shell commands when a window receives or loses focus
+* optional delay
 
-## install globally
+## install globally and run
 
 With [node.js] installed on the target [X11] box:
 
     $ npm install -g xawt            # might need to prefix with sudo
-
-## get started
-
-Create a configuration file at `~/.config/xawt.yml` (or wherever your
-[$XDG_CONFIG_HOME] is pointing) with the following content:
-
-    /(.*)/:             # regular expression to match any window title
-      in: echo in @1    # run this command when any window receives Focus
-      out: echo out @1  # run this command when any window loses Focus
-
-Then start xawt:
-
     $ xawt
 
-and you should see both `echo` commands run whenever the window focus changes.
+You should see `echo` commands run whenever the window focus changes.
+
+## configure
+
+On its first run xawt copies the [default configuration file] to
+`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `~/.config/xawt.yml`.
+This [yaml] file contains one or more rules of form:
+
+/*regex*/:
+  in: *action*
+  out: *action*
+
+* *regex*
+  a [JavaScript] [regular expression]
+* in: *action*
+  Do *action* when *regex* matches the title of a window receiving focus (activating).
+* out: *action*
+  Do *action* when *regex* matches the title of a window losing focus (de-activating).
+* *action*
+  Either the shell command to run immediately, or {delay: *delay*, command: *command*}
+  to run *command* after *delay* seconds (unless *regex* subsequently matches
+  before *command* has run).
 
 ## options
 
@@ -34,7 +44,7 @@ and you should see both `echo` commands run whenever the window focus changes.
       -h, --help                output usage information
       -V, --version             output the version number
       -c, --config-path [path]  path to configuration file (default:~/.config/xawt.yml)
-      -d, --dry-run             bypass command execute
+      -d, --dry-run             trace commands without executing
       -v, --verbose             emit detailed trace for debugging
 
 ## developer build and run
@@ -42,14 +52,17 @@ and you should see both `echo` commands run whenever the window focus changes.
     $ git clone --branch=dev https://github.com/dizzib/xawt.git
     $ cd xawt
     $ npm install     # install dependencies
+    $ npm test        # build all and run tests
     $ npm start       # start the task runner
-    xawt > b.a        # build all and run
 
 ## license
 
 [MIT](./LICENSE)
 
 [$XDG_CONFIG_HOME]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+[default configuration file]: ./app/default-config.yml
+[JavaScript]: https://en.wikipedia.org/wiki/JavaScript
 [node.js]: http://nodejs.org
+[regular expression]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [X11]: https://en.wikipedia.org/wiki/X_Window_System
 [yaml]: https://en.wikipedia.org/wiki/YAML
