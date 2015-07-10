@@ -39,8 +39,8 @@ function worker task, cb
   return cb! unless task.atom is x.atoms._NET_ACTIVE_WINDOW
   err, wid <- get-active-wid
   return cb err if err or not wid
-  return cb! if wid is state.current.wid # dedupe duplicate x11 events race
   Assert state.current.wid, 'state.current.wid'
+  return cb! if wid is state.current.wid # dedupe duplicate x11 events race
   err, state.previous <- get-window-title pwid = state.current.wid
   if err
     return cb err unless err.xerr.error is 3 # bad window
