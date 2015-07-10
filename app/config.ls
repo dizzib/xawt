@@ -21,10 +21,9 @@ module.exports = me =
     cfg = Yaml.safeLoad Fs.readFileSync path
     cache := {}
     for k, v of cfg
-      arr = k.split '/'
-      A arr.0.length is 0, 'key must be a regular expression'
-      A arr.1.length
-      cache[k] = v <<< rx:new RegExp arr.1
+      if (key = k.split '/').0.length or not key.1.length or key.2.length
+        throw new Error "key #k must be /regex/"
+      cache[k] = v <<< rx:new RegExp key.1
     fsw := Fs.watch path, (ev, fname) ->
       return unless ev is \change
       log "Reload #path"
