@@ -3,7 +3,6 @@ Args = require \./args
 global.log.debug = if Args.verbose then console.log else ->
 
 Cp  = require \child_process
-U   = require \util
 Cmd = require \./command
 Cfg = require \./config .load!
 Xaw = require \./x11-active-window
@@ -21,7 +20,7 @@ Xaw.on \changed ->
 function run-commands cmds
   for c in cmds
     if Args.dry-run then return log \dry-run c
-    U.log c
+    log.debug c
     err, stdout, stderr <- Cp.exec c
     log err if err
     log stdout if stdout.length
