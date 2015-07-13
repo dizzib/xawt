@@ -46,8 +46,9 @@ function worker task, cb
     return cb err unless err.xerr.error is 3 # bad window
     log.debug "detected close wid=#pwid"
     state.previous = null
-  err, state.current <- get-window-title wid
+  err, cur <- get-window-title wid
   return cb err if err
+  state.current = cur
   me.emit \changed state
   cb!
 
