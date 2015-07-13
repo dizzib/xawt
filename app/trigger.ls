@@ -3,7 +3,7 @@ Args = require \./args
 global.log.debug = if Args.verbose then console.log else ->
 
 Cp  = require \child_process
-Cmd = require \./command
+Act = require \./action
 Cfg = require \./config .load!
 Xaw = require \./x11-active-window
 
@@ -14,8 +14,8 @@ return log err if err
 
 Xaw.on \changed ->
   log.debug \changed it
-  do-actions Cmd.find it.previous, \out
-  do-actions Cmd.find it.current, \in
+  do-actions Act.find it.previous, \out
+  do-actions Act.find it.current, \in
 
 function do-actions acts
   for a in acts

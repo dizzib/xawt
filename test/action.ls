@@ -1,5 +1,5 @@
 test = it
-<- describe 'command.find'
+<- describe 'action.find'
 global.log = console.log
 
 A = require \chai .assert
@@ -29,7 +29,7 @@ before ->
         rx : /(hi|good) (\w+)/
         in : '$1 $2 ann'
         out: '$1 $2 bob'
-  T := require \../app/command
+  T := require \../app/action
 
 test 'null state' ->
   A.deepEqual [] T.find null \in

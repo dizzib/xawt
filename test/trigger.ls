@@ -7,7 +7,7 @@ E = require \events .EventEmitter
 M = require \mockery
 
 var out, T
-var args, cmd, cfg, xaw
+var args, act, cfg, xaw
 
 after ->
   M.deregisterAll!
@@ -18,7 +18,7 @@ before ->
     out.push cmd
     cb null \stdout \stderr
   M.registerMock \./args args := verbose:0
-  M.registerMock \./command cmd := do
+  M.registerMock \./action act := do
     find: ({title}, dirn) -> [command:"#dirn -#c" delay:0 for c in title]
   M.registerMock \./config cfg := load: -> cfg
   M.registerMock \./x11-active-window xaw := (new E!)
