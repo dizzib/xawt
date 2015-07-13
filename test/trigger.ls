@@ -1,6 +1,5 @@
 test = it
 <- describe 'trigger'
-log = console.log
 
 A = require \chai .assert
 E = require \events .EventEmitter
@@ -19,8 +18,7 @@ before ->
     return cb new Error cmd if _.contains cmd, \-B
     if _.contains cmd, \-b then cb null, '', cmd else cb null, cmd, ''
   M.registerMock \./args args := verbose:0
-  M.registerMock \./action act := do
-    find: ({title}, dirn) -> [command:"#dirn -#c" delay:0 for c in title]
+  M.registerMock \./action act := {}
   M.registerMock \./config cfg := load: -> cfg
   M.registerMock \./log -> out.push it
   M.registerMock \./x11-active-window xaw := (new E!)
@@ -31,24 +29,24 @@ beforeEach ->
 
 test 'bail if missing config' ->
   cfg.get = -> null
-  xaw.init = A.fail
+  xaw.init = A.fail # did not bail
   T = require \../app/trigger
 
-run ''   ''   ''
-run 'a'  ''   'out -a'
-run ''   'b'  'in -b'
-run 'a'  'b'  'out -a;in -b'
-run 'aA' 'bB' 'out -a;out -A;in -b;Error: in -B'
-run 'a'  ''   '' dry-run:true
-run 'aA' 'bB' '' dry-run:true
+describe 'immediate' ->
+  run ''   ''   ''
+  run 'a'  ''   'out -a'
+  run ''   'b'  'in -b'
+  run 'a'  'b'  'out -a;in -b'
+  run 'aA' 'bB' 'out -a;out -A;in -b;Error: in -B'
+  run 'a'  ''   '' dry-run:true
+  run 'aA' 'bB' '' dry-run:true
 
-function run pre, cur, expect, opts = dry-run:false
-  test "#pre --> #cur" ->
-    cfg.get = -> {}
-    xaw.init = (cb) -> cb!
-    args <<< opts
-    T = require \../app/trigger
-    xaw.emit \changed do
-      current : title:cur
-      previous: title:pre
-    A.equal expect, out * ';'
+  function run pre, cur, expect, opts = dry-run:false
+    test "#pre --> #cur" ->
+      cfg.get = -> {}
+      xaw.init = (cb) -> cb!
+      act.find = ({title}, dirn) -> [command:"#dirn -#c" delay:0 for c in title]
+      args <<< opts
+      T = require \../app/trigger
+      xaw.emit \changed current:{title:cur} previous:{title:pre}
+      A.equal expect, out * ';'
