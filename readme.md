@@ -19,20 +19,19 @@ On its first run xawt copies the [default configuration file] to `~/.config/xawt
 unless you've changed your [$XDG_CONFIG_HOME] variable.
 This [yaml] file contains one or more rules:
 
-/*regex*/:
-  in: *action*
-  out: *action*
+    /regex/:
+      in: action
+      out: action
 
-* *regex*
+* `regex` :
   a [JavaScript regular expression]
-* in: *action*
-  Do *action* when *regex* matches the title of a window receiving focus (activating).
-* out: *action*
-  Do *action* when *regex* matches the title of a window losing focus (de-activating).
-* *action*
-  Either the shell command to run immediately, or {delay: *delay*, command: *command*}
-  to run *command* after *delay* seconds (unless *regex* subsequently matches
-  before *command* has run).
+* `in:` :
+  (optional) define action to perform when regex matches the title of a window receiving focus (activating).
+* `out:` :
+  (optional) define action to perform when regex matches the title of a window losing focus (de-activating).
+* `action` :
+  either the shell command to run immediately, or `{delay: dly, command: cmd}`
+  to run cmd after dly seconds, unless regex subsequently matches before cmd has run.
 
 Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
@@ -56,7 +55,7 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
     $ cd xawt
     $ npm install     # install dependencies
     $ npm test        # build all and run tests
-    $ npm start       # start the task runner
+    $ npm start       # start the task runner and dry-run xawt
 
 ## license
 
