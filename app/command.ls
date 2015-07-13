@@ -8,7 +8,7 @@ module.exports =
     return res unless title = state?title
     A direction in <[ in out ]>
     for k, v of C.get! when (act = v[direction])? and r = v.rx.exec title
-      log.debug 'found match:' k, v, act, r
+      log.debug 'found match:' k, v, act #, r
       act = delay:0 command:act if _.isString act
       for submatch, i in r when i > 0
         log.debug "submatch $#i=#submatch"
