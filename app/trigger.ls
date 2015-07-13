@@ -1,11 +1,9 @@
-global.log = console.log
+Cp   = require \child_process
+Log  = require \./log
 Args = require \./args
-global.log.debug = if Args.verbose then console.log else ->
-
-Cp  = require \child_process
-Act = require \./action
-Cfg = require \./config .load!
-Xaw = require \./x11-active-window
+Act  = require \./action
+Cfg  = require \./config .load!
+Xaw  = require \./x11-active-window
 
 return log 'No configuration -- bailing' unless Cfg.get!
 
@@ -23,6 +21,6 @@ function do-actions acts
     if Args.dry-run then return log \dry-run c
     log.debug c
     err, stdout, stderr <- Cp.exec c
-    log err if err
-    log stdout if stdout.length
-    log stderr if stderr.length
+    return Log err if err
+    Log stdout if stdout.length
+    Log stderr if stderr.length
