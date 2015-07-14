@@ -1,6 +1,5 @@
 test = it
 <- describe 'config'
-global.log = console.log
 
 A = require \chai .assert
 S = require \shelljs/global
@@ -14,7 +13,6 @@ after ->
   M.deregisterAll!
   M.disable!
 before ->
-  global.log.debug = if 0 then console.log else ->
   M.enable warnOnUnregistered:false
   M.registerMock \./args args := config-path:\/tmp/xawt-config.yml
   T := require \../app/config
@@ -26,7 +24,7 @@ deq = A.deepEqual
 test 'missing with default config-path should copy default-config.yml' ->
   args.is-default-config-path = true
   rm \-f args.config-path
-  deq T.load!get!, '/(.*)/': rx:/(.*)/ in:'echo in $1' out:'echo out $1'
+  deq T.load!get!, '/(.*)/': rx:/(.*)/ in:'echo in $1' out:{command:'echo out $1' delay:2}
 
 test 'missing with overridden config-path' ->
   args.is-default-config-path = false

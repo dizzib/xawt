@@ -4,49 +4,120 @@ test = it
 A = require \chai .assert
 E = require \events .EventEmitter
 _ = require \lodash
+L = require \lolex
 M = require \mockery
 
-var out, T
+var clock, out
 var args, act, cfg, xaw
 
 after ->
+  clock.uninstall!
   M.deregisterAll!
   M.disable!
 before ->
+  clock := L.install global
   M.enable warnOnUnregistered:false useCleanCache:true
   M.registerMock \child_process exec: (cmd, cb) ->
-    return cb new Error cmd if _.contains cmd, \-B
-    if _.contains cmd, \-b then cb null, '', cmd else cb null, cmd, ''
-  M.registerMock \./args args := verbose:0
+    return cb new Error cmd if _.endsWith cmd, \B
+    if _.endsWith cmd, \b then cb null '' cmd else cb null, cmd, ''
+  M.registerMock \./args args := {}
   M.registerMock \./action act := {}
-  M.registerMock \./config cfg := load: -> cfg
+  M.registerMock \./config cfg := load:->cfg
   M.registerMock \./log -> out.push it
   M.registerMock \./x11-active-window xaw := (new E!)
 beforeEach ->
-  out := []
+  clock.reset!
   xaw.removeAllListeners!
   M.resetCache!
+  args.dry-run = false
+  cfg.get = -> {}
+  xaw.init = -> it!
+  out := []
 
 test 'bail if missing config' ->
   cfg.get = -> null
   xaw.init = A.fail # did not bail
-  T = require \../app/trigger
+  require \../app/trigger
+
+test 'bail if Xaw.init fails' ->
+  xaw.init = -> it \err
+  require \../app/trigger
+  act.find = ({title}) -> [_command:title delay:0]
+  emit \a \b
+  assert-out \err
 
 describe 'immediate' ->
-  run ''   ''   ''
-  run 'a'  ''   'out -a'
-  run ''   'b'  'in -b'
-  run 'a'  'b'  'out -a;in -b'
-  run 'aA' 'bB' 'out -a;out -A;in -b;Error: in -B'
-  run 'a'  ''   '' dry-run:true
-  run 'aA' 'bB' '' dry-run:true
+  describe 'dry run' ->
+    run 'a'  ''   'dry-run out a' true
+    run 'aA' 'bB' 'dry-run out a;dry-run out A;dry-run in b;dry-run in B' true
+  describe 'live run' ->
+    run ''   ''   ''
+    run 'a'  ''   'out a'
+    run ''   'b'  'in b'
+    run 'a'  'b'  'out a;in b'
+    run 'aA' 'bB' 'out a;out A;in b;Error: in B'
 
-  function run pre, cur, expect, opts = dry-run:false
+  function run pre, cur, expect, dry-run = false
     test "#pre --> #cur" ->
-      cfg.get = -> {}
-      xaw.init = (cb) -> cb!
-      act.find = ({title}, dirn) -> [command:"#dirn -#c" delay:0 for c in title]
-      args <<< opts
-      T = require \../app/trigger
-      xaw.emit \changed current:{title:cur} previous:{title:pre}
-      A.equal expect, out * ';'
+      act.find = ({title}, dirn) -> [_command:"#dirn #c" delay:0 for c in title]
+      args.dry-run = dry-run
+      require \../app/trigger
+      emit pre, cur
+      assert-out expect
+
+describe 'delay' ->
+  beforeEach ->
+    act.find = ({title}, dirn) -> [_command:"#dirn #title" delay:title, direction:dirn, rx:new RegExp title]
+
+  test 'dry run' ->
+    args.dry-run = true
+    require \../app/trigger
+    emit 0 10
+    assert-after 9 'dry-run out 0'
+    assert-after 1 'dry-run out 0;dry-run in 10'
+
+  describe 'live run' ->
+    beforeEach ->
+      require \../app/trigger
+
+    test 'in' ->
+      emit 0 10
+      assert-after 9 'out 0'
+      assert-after 1 'out 0;in 10'
+
+    test 'out' ->
+      emit 10 0
+      assert-after 9 'in 0'
+      assert-after 1 'in 0;out 10'
+
+    test 'multi' ->
+      emit 10 5
+      assert-after 4 ''
+      assert-after 1 'in 5'
+      assert-after 4 'in 5'
+      assert-after 1 'in 5;out 10'
+
+    describe 'cancel' ->
+      test 'in' ->
+        emit 0 10
+        assert-after 5 'out 0'
+        emit 10 0
+        assert-after 1 'out 0;in 0'
+        assert-after 8 'out 0;in 0'
+
+      test 'out' ->
+        emit 10 0
+        assert-after 5 'in 0'
+        emit 0 10
+        assert-after 1 'in 0;out 0'
+        assert-after 8 'in 0;out 0'
+
+  function assert-after secs, expect
+    clock.tick secs * 1000
+    assert-out expect
+
+function assert-out
+  A.equal it, out * ';'
+
+function emit pre, cur
+  xaw.emit \changed current:{title:cur} previous:{title:pre}

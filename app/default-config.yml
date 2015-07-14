@@ -1,6 +1,8 @@
 # xawt configuration
 
 # example
-/(.*)/:             # regular expression to match any window title
-  in: echo in $1    # run this command when any window receives Focus
-  out: echo out $1  # run this command when any window loses Focus
+/(.*)/:           # regular expression to match any window title
+  in: echo in $1  # run this command when any window receives Focus
+  out:
+    command: echo out $1 # run this command 2 seconds after any window loses Focus
+    delay: 2

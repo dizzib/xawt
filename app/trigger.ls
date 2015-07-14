@@ -1,26 +1,50 @@
 Cp   = require \child_process
+_    = require \lodash
+U    = require \util
 Log  = require \./log
 Args = require \./args
 Act  = require \./action
 Cfg  = require \./config .load!
 Xaw  = require \./x11-active-window
 
-return log 'No configuration -- bailing' unless Cfg.get!
-
+return Log 'No configuration -- bailing' unless Cfg.get!
 err <- Xaw.init
-return log err if err
+return Log err if err
+
+newid   = 1
+pending = {}
 
 Xaw.on \changed ->
   log.debug \changed it
+  cancel-rematching-pendings \in it.previous.title
+  cancel-rematching-pendings \out it.current.title
   do-actions Act.find it.previous, \out
   do-actions Act.find it.current, \in
 
-function do-actions acts
-  for a in acts
-    c = a.command
-    if Args.dry-run then return log \dry-run c
-    log.debug c
-    err, stdout, stderr <- Cp.exec c
-    return Log err if err
-    Log stdout if stdout.length
-    Log stderr if stderr.length
+function cancel-rematching-pendings direction, title
+  for id, p of pending when p.act.direction is direction and p.act.rx.test title
+    log.debug "clear pending[#id]"
+    clearTimeout p.timeout
+    delete pending[id]
+
+function do-actions
+  for act in it
+    if d = act.delay * 1000
+      log.debug "add pending[#newid] = #{U.inspect act}"
+      t = setTimeout run-pending, d, newid
+      pending[newid++] = act:act, timeout:t
+    else
+      run-command act._command
+
+function run-command
+  return Log "dry-run #it" if Args.dry-run
+  log.debug it
+  err, stdout, stderr <- Cp.exec it
+  return Log err if err
+  Log stdout if stdout.length
+  Log stderr if stderr.length
+
+function run-pending id
+  log.debug "run pending[#id]"
+  run-command (p = pending[id]).act._command
+  delete pending[id]

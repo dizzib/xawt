@@ -1,2 +1,3 @@
 global.log = console.log
-Error.stackTraceLimit = 1
+global.log.debug = if 0 then console.log else ->
+Error.stackTraceLimit = 3
