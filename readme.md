@@ -19,7 +19,7 @@ You should see `echo` commands run whenever the window focus changes.
 ## configure
 
 On its first run xawt copies the [default configuration file] to
-`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `~/.config/xawt.yml`.
+`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `$HOME/.config/xawt.yml`.
 Edit this [yaml] file with one or more rules:
 
     /regex/:
