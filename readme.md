@@ -40,7 +40,7 @@ Edit this [yaml] file with one or more rules:
 Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
 
-    # xawt configuration example
+    # xawt.yml configuration example
 
     # freeze Firefox unless it has the focus
     /- (Mozilla Firefox|Vimperator)$/:
