@@ -68,7 +68,7 @@ describe 'immediate' ->
 describe 'delay' ->
   beforeEach ->
     act.find = (s, d) ->
-      return [_command:'', delay:0, direction:d, rx:null] unless s?
+      return [] unless s?
       [_command:"#d #{s.title}" delay:s.title, direction:d, rx:new RegExp s.title]
 
   test 'dry-run' ->
