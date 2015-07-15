@@ -4,6 +4,9 @@
 * run shell commands when a window receives or loses focus
 * optional delay
 
+Use it to prevent idling background applications from surreptitiously
+stealing your cpu cycles.
+
 ## install globally and run
 
 With [node.js] installed on the target [X11] box:
