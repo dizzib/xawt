@@ -40,17 +40,17 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
     # xawt configuration example
 
     # unpause any virtualbox guest immediately on gaining focus
-    /(\w+) \[Paused\] - Oracle VM VirtualBox/:
+    /^(\w+) \[Paused\] - Oracle VM VirtualBox$/:
       in: vboxmanage controlvm $1 resume
 
     # unconditionally pause virtualbox guest 30 seconds after losing focus
-    /(HERBERT|SANDPIT) \[Running\] - Oracle VM VirtualBox/:
+    /^(HERBERT|SANDPIT) \[Running\] - Oracle VM VirtualBox$/:
       out:
         command: vboxmanage controlvm $1 pause
         delay: 30
 
     # pause virtualbox guest 60 seconds after losing focus unless vlc is running
-    /(SWEEP) \[Running\] - Oracle VM VirtualBox/:
+    /^(SWEEP) \[Running\] - Oracle VM VirtualBox$/:
       out:
         command: (! vboxmanage guestcontrol $1 exec --wait-stdout --image /bin/pgrep -- vlc) && vboxmanage controlvm $1 pause
         delay: 60
