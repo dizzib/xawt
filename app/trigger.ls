@@ -16,13 +16,14 @@ pending = {}
 
 Xaw.on \changed ->
   log.debug \changed it
-  cancel-rematching-pendings \in it.previous.title
-  cancel-rematching-pendings \out it.current.title
+  cancel-rematching-pendings \in it.previous
+  cancel-rematching-pendings \out it.current
   do-actions Act.find it.previous, \out
   do-actions Act.find it.current, \in
 
-function cancel-rematching-pendings direction, title
-  for id, p of pending when p.act.direction is direction and p.act.rx.test title
+function cancel-rematching-pendings direction, state
+  return unless state?
+  for id, p of pending when p.act.direction is direction and p.act.rx.test state.title
     log.debug "clear pending[#id]"
     clearTimeout p.timeout
     delete pending[id]

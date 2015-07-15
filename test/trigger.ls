@@ -47,10 +47,10 @@ test 'bail if Xaw.init fails' ->
   assert-out \err
 
 describe 'immediate' ->
-  describe 'dry run' ->
+  describe 'dry-run' ->
     run 'a'  ''   'dry-run out a' true
     run 'aA' 'bB' 'dry-run out a;dry-run out A;dry-run in b;dry-run in B' true
-  describe 'live run' ->
+  describe 'live' ->
     run ''   ''   ''
     run 'a'  ''   'out a'
     run ''   'b'  'in b'
@@ -59,7 +59,7 @@ describe 'immediate' ->
 
   function run pre, cur, expect, dry-run = false
     test "#pre --> #cur" ->
-      act.find = ({title}, dirn) -> [_command:"#dirn #c" delay:0 for c in title]
+      act.find = (s, d) -> [_command:"#d #c" delay:0 for c in s.title]
       args.dry-run = dry-run
       require \../app/trigger
       emit pre, cur
@@ -67,16 +67,18 @@ describe 'immediate' ->
 
 describe 'delay' ->
   beforeEach ->
-    act.find = ({title}, dirn) -> [_command:"#dirn #title" delay:title, direction:dirn, rx:new RegExp title]
+    act.find = (s, d) ->
+      return [_command:'', delay:0, direction:d, rx:null] unless s?
+      [_command:"#d #{s.title}" delay:s.title, direction:d, rx:new RegExp s.title]
 
-  test 'dry run' ->
+  test 'dry-run' ->
     args.dry-run = true
     require \../app/trigger
     emit 0 10
     assert-after 9 'dry-run out 0'
     assert-after 1 'dry-run out 0;dry-run in 10'
 
-  describe 'live run' ->
+  describe 'live' ->
     beforeEach ->
       require \../app/trigger
 
@@ -96,6 +98,11 @@ describe 'delay' ->
       assert-after 1 'in 5'
       assert-after 4 'in 5'
       assert-after 1 'in 5;out 10'
+
+    test 'close' -> # null state
+      emit 10 5
+      emit null 0
+      assert-after 1 'in 0'
 
     describe 'cancel' ->
       test 'in' ->
@@ -120,4 +127,6 @@ function assert-out
   A.equal it, out * ';'
 
 function emit pre, cur
-  xaw.emit \changed current:{title:cur} previous:{title:pre}
+  xaw.emit \changed do
+    current : title:cur
+    previous: title:pre if pre?
