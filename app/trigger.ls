@@ -18,22 +18,22 @@ Xaw.on \changed ->
   log.debug \changed it
   cancel-rematching-pendings \in it.previous
   cancel-rematching-pendings \out it.current
-  do-actions Act.find it.previous, \out
-  do-actions Act.find it.current, \in
+  do-actions \out it.previous
+  do-actions \in it.current
 
 function cancel-rematching-pendings direction, state
   return unless state?
-  for id, p of pending when p.act.direction is direction and p.act.rx.test state.title
+  for id, p of pending when p.act.direction is direction and p.wid is state.wid
     log.debug "clear pending[#id]"
     clearTimeout p.timeout
     delete pending[id]
 
-function do-actions
-  for act in it
+function do-actions direction, state
+  for act in Act.find state, direction
     if d = act.delay * 1000
-      log.debug "add pending[#newid] = #{U.inspect act}"
+      log.debug "add pending[#newid] = act:#{U.inspect act} wid:#{state.wid}"
       t = setTimeout run-pending, d, newid
-      pending[newid++] = act:act, timeout:t
+      pending[newid++] = act:act, timeout:t, wid:state.wid
     else
       run-command act._command
 

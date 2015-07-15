@@ -55,9 +55,7 @@ describe 'immediate' ->
   function run dirn, title, ecmds, erules
     test "#dirn #title" ->
       expect = for c, i in ecmds
-        _command : c
-        command  : (r = RULES[erules[i]])[dirn].command or r[dirn]
+        command  : c
         delay    : 0
         direction: dirn
-        rx       : r.rx
       A.deepEqual expect, T.find title:title, dirn

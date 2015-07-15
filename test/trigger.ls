@@ -69,7 +69,7 @@ describe 'delay' ->
   beforeEach ->
     act.find = (s, d) ->
       return [] unless s?
-      [_command:"#d #{s.title}" delay:s.title, direction:d, rx:new RegExp s.title]
+      [_command:"#d #{s.title}" delay:s.title, direction:d]
 
   test 'dry-run' ->
     args.dry-run = true
@@ -107,17 +107,18 @@ describe 'delay' ->
     describe 'cancel' ->
       test 'in' ->
         emit 0 10
-        assert-after 5 'out 0'
         emit 10 0
-        assert-after 1 'out 0;in 0'
-        assert-after 8 'out 0;in 0'
+        assert-after 99 'out 0;in 0;out 10'
 
       test 'out' ->
         emit 10 0
-        assert-after 5 'in 0'
         emit 0 10
-        assert-after 1 'in 0;out 0'
-        assert-after 8 'in 0;out 0'
+        assert-after 99 'in 0;out 0;in 10'
+
+      test 'multi' ->
+        emit 20 10
+        emit 10 0
+        assert-after 99 'in 0;out 10;out 20'
 
   function assert-after secs, expect
     clock.tick secs * 1000
@@ -128,5 +129,5 @@ function assert-out
 
 function emit pre, cur
   xaw.emit \changed do
-    current : title:cur
-    previous: title:pre if pre?
+    current : title:cur, wid:cur
+    previous: title:pre, wid:pre if pre?
