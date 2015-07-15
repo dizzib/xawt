@@ -35,7 +35,7 @@ function do-actions direction, state
       t = setTimeout run-pending, d, newid
       pending[newid++] = act:act, timeout:t, wid:state.wid
     else
-      run-command act._command
+      run-command act.command
 
 function run-command
   return Log "dry-run #it" if Args.dry-run
@@ -47,5 +47,5 @@ function run-command
 
 function run-pending id
   log.debug "run pending[#id]"
-  run-command (p = pending[id]).act._command
+  run-command (p = pending[id]).act.command
   delete pending[id]

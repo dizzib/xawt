@@ -42,7 +42,7 @@ test 'bail if missing config' ->
 test 'bail if Xaw.init fails' ->
   xaw.init = -> it \err
   require \../app/trigger
-  act.find = ({title}) -> [_command:title delay:0]
+  act.find = ({title}) -> [command:title delay:0]
   emit \a \b
   assert-out \err
 
@@ -59,7 +59,7 @@ describe 'immediate' ->
 
   function run pre, cur, expect, dry-run = false
     test "#pre --> #cur" ->
-      act.find = (s, d) -> [_command:"#d #c" delay:0 for c in s.title]
+      act.find = (s, d) -> [command:"#d #c" delay:0 for c in s.title]
       args.dry-run = dry-run
       require \../app/trigger
       emit pre, cur
@@ -69,7 +69,7 @@ describe 'delay' ->
   beforeEach ->
     act.find = (s, d) ->
       return [] unless s?
-      [_command:"#d #{s.title}" delay:s.title, direction:d]
+      [command:"#d #{s.title}" delay:s.title, direction:d]
 
   test 'dry-run' ->
     args.dry-run = true
