@@ -26,12 +26,13 @@ This [yaml] file contains one or more rules:
 * `regex` :
   a [JavaScript regular expression]
 * `in:` :
-  (optional) define action to perform when regex matches the title of a window receiving focus (activating).
+  (optional) action to perform when regex matches the title of a window receiving focus (activating).
 * `out:` :
-  (optional) define action to perform when regex matches the title of a window losing focus (de-activating).
+  (optional) action to perform when regex matches the title of a window losing focus (de-activating).
 * `action` :
   either the shell command to run immediately, or `{delay: dly, command: cmd}`
-  to run cmd after dly seconds, unless regex subsequently matches before cmd has run.
+  to run cmd after dly seconds unless the window's focus subsequently changes
+  before cmd has run.
 
 Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
