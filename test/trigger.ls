@@ -70,6 +70,7 @@ describe 'delay' ->
     act.find = (s, d) ->
       return [] unless s?
       [command:"#d #{s.title}" delay:s.title, direction:d]
+    xaw.get-window-state = (wid, cb) -> cb null wid:wid
 
   test 'dry-run' ->
     args.dry-run = true
@@ -99,10 +100,16 @@ describe 'delay' ->
       assert-after 4 'in 5'
       assert-after 1 'in 5;out 10'
 
-    test 'close' -> # null state
-      emit 10 5
-      emit null 0
-      assert-after 1 'in 0'
+    describe 'close' ->
+      test 'fast (null state)' ->
+        emit 10 5
+        emit null 0
+        assert-after 1 'in 0'
+
+      test 'slow' ->
+        emit 0 10
+        xaw.get-window-state = (wid, cb) -> cb null null
+        assert-after 99 'out 0'
 
     describe 'cancel' ->
       test 'in' ->

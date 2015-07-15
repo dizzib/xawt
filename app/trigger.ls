@@ -16,12 +16,12 @@ pending = {}
 
 Xaw.on \changed ->
   log.debug \changed it
-  cancel-rematching-pendings \in it.previous
-  cancel-rematching-pendings \out it.current
+  clear-pendings \in it.previous
+  clear-pendings \out it.current
   do-actions \out it.previous
   do-actions \in it.current
 
-function cancel-rematching-pendings direction, state
+function clear-pendings direction, state
   return unless state?
   for id, p of pending when p.act.direction is direction and p.wid is state.wid
     log.debug "clear pending[#id]"
@@ -47,5 +47,9 @@ function run-command
 
 function run-pending id
   log.debug "run pending[#id]"
-  run-command (p = pending[id]).act.command
+  p = pending[id]
   delete pending[id]
+  err, state <- Xaw.get-window-state wid = p.wid
+  return Log err if err
+  return log.debug "window #wid has closed -- aborting" unless state?
+  run-command p.act.command
