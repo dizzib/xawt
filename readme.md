@@ -15,16 +15,16 @@ You should see `echo` commands run whenever the window focus changes.
 
 ## configure
 
-On its first run xawt copies the [default configuration file] to `~/.config/xawt.yml`
-unless you've changed your [$XDG_CONFIG_HOME] variable.
-This [yaml] file contains one or more rules:
+On its first run xawt copies the [default configuration file] to
+`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `~/.config/xawt.yml`.
+Edit this [yaml] file with one or more rules:
 
     /regex/:
       in: action
       out: action
 
 * `regex` :
-  a [JavaScript regular expression]
+  a unique [JavaScript regular expression]
 * `in:` :
   (optional) action to perform when regex matches the title of a window receiving focus (activating).
 * `out:` :
@@ -38,6 +38,11 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
 
     # xawt configuration example
+
+    # freeze Firefox unless it has the focus
+    /- (Mozilla Firefox|Vimperator)$/:
+      in: pkill -SIGCONT firefox
+      out: pkill -SIGSTOP firefox
 
     # unpause any virtualbox guest immediately on gaining focus
     /^(\w+) \[Paused\] - Oracle VM VirtualBox$/:
