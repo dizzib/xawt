@@ -29,7 +29,6 @@ devDependencies:
   istanbul   : \~0.3.13
   livescript : \~1.4.0
   lolex      : \~1.2.1
-  marked     : \~0.3.3
   mocha      : \~2.2.5
   mockery    : \~1.4.0
   'wait.for' : \~0.6.3
