@@ -15,7 +15,7 @@ after ->
   M.deregisterAll!
   M.disable!
 before ->
-  clock := L.install global
+  clock := L.install!
   M.enable warnOnUnregistered:false useCleanCache:true
   M.registerMock \child_process exec: (cmd, cb) ->
     return cb new Error cmd if _.endsWith cmd, \B
