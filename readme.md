@@ -44,8 +44,10 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
 
     # freeze Firefox unless it has the focus
     /- (Mozilla Firefox|Vimperator)$/:
-      in: pkill -SIGCONT firefox
-      out: pkill -SIGSTOP firefox
+      in: pkill -CONT firefox
+      out:
+        command: pkill -STOP firefox
+        delay: 10
 
     # unpause any virtualbox guest immediately on gaining focus
     /^(\w+) \[Paused\] - Oracle VM VirtualBox$/:
