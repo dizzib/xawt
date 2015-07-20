@@ -1,6 +1,7 @@
-global.log = console.log
+module.exports = me = global.log = log
+me.debug = if (require \./args).verbose then log else ->
 
-Args = require \./args
-global.log.debug = if Args.verbose then console.log else ->
-
-module.exports = global.log
+function log ...args
+  d = new Date Date.now!
+  t = "#{d.getDate!}/#{1 + d.getMonth!} #{d.toLocaleTimeString!}"
+  console.log t, ...args
