@@ -16,7 +16,7 @@ scripts:
 dependencies:
   async      : \1.3.0
   commander  : \2.6.0
-  'js-yaml'  : \3.2.5
+  leanconf   : \0.2.0
   lodash     : \3.5.0
   shelljs    : \0.3.0
   x11        : \1.0.3

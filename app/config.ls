@@ -1,6 +1,6 @@
 A    = require \assert
 Fs   = require \fs
-Yaml = require \js-yaml
+Lc   = require \leanconf
 Sh   = require \shelljs/global
 Args = require \./args
 
@@ -16,9 +16,9 @@ module.exports = me =
         log 'Please ensure this path is correct and the file exists.'
         return me
       log "Copying default config to #path"
-      cp "#__dirname/default-config.yml" path
+      cp "#__dirname/default.conf" path
     log.debug "load config from #path"
-    cfg = Yaml.safeLoad Fs.readFileSync path
+    cfg = Lc.parse Fs.readFileSync path
     cache := {}
     for k, v of cfg
       if (key = k.split '/').0.length or not key.1.length or key.2.length

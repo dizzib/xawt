@@ -3,7 +3,6 @@ test = it
 
 A = require \chai .assert
 S = require \shelljs/global
-Y = require \js-yaml
 _ = require \lodash
 M = require \mockery
 
@@ -14,17 +13,18 @@ after ->
   M.disable!
 before ->
   M.enable warnOnUnregistered:false
-  M.registerMock \./args args := config-path:\/tmp/xawt-config.yml
+  M.registerMock \./args args := config-path:\/tmp/xawt.conf
   T := require \../app/config
 beforeEach ->
   T.reset!
 
 deq = A.deepEqual
 
-test 'missing with default config-path should copy default-config.yml' ->
+test 'missing with default config-path should copy default.conf' ->
   args.is-default-config-path = true
   rm \-f args.config-path
-  deq T.load!get!, '/(.*)/': rx:/(.*)/ in:'echo in $1' out:{command:'echo out $1' delay:2}
+  deq T.load!get!, '/(.*)/':
+    rx:/(.*)/ in:'echo in $1' out:{command:'echo out $1' delay:2}
 
 test 'missing with overridden config-path' ->
   args.is-default-config-path = false
@@ -63,17 +63,13 @@ test 'updated file should auto-reload' (done) ->
     done!
   ,5
 
-test 'malformed yaml' ->
+test 'malformed' ->
   prepare \malformed
-  try T.load!
-  catch e
-  A.instanceOf e, Y.YAMLException
+  A.throws T.load, ''
 
 test 'key not regex' ->
   prepare \not-regex
-  try T.load!
-  catch e
-  A.instanceOf e, Error
+  A.throws T.load, 'key foo must be /regex/'
 
 function prepare
-  cp \-f "./test/config/#it.yml" args.config-path
+  cp \-f "./test/config/#it.conf" args.config-path

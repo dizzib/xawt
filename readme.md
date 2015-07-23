@@ -19,8 +19,8 @@ You should see `echo` commands run whenever the window focus changes.
 ## configure
 
 On its first run xawt copies the [default configuration file] to
-`$XDG_CONFIG_HOME/xawt.yml` which [defaults to][$XDG_CONFIG_HOME] `$HOME/.config/xawt.yml`.
-Edit this [yaml] file with one or more rules:
+`$XDG_CONFIG_HOME/xawt.conf` which [defaults to][$XDG_CONFIG_HOME]
+`$HOME/.config/xawt.conf`. Edit this [leanconf] file with one or more rules:
 
     /regex/:
       in: action
@@ -33,14 +33,18 @@ Edit this [yaml] file with one or more rules:
 * `out:` :
   (optional) action to perform when regex matches the title of a window losing focus (de-activating).
 * `action` :
-  either the shell command to run immediately, or `{delay: dly, command: cmd}`
+  either the shell command to run immediately, or
+
+      delay: dly
+      command: cmd
+
   to run cmd after dly seconds unless the window's focus subsequently changes
   before cmd has run.
 
 Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
 
-    # xawt.yml configuration example
+    # xawt.conf example configuration
 
     # freeze Firefox unless it has the focus
     /- (Mozilla Firefox|Vimperator)$/:
@@ -74,7 +78,7 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
 
       -h, --help                output usage information
       -V, --version             output the version number
-      -c, --config-path [path]  path to configuration file (default:~/.config/xawt.yml)
+      -c, --config-path [path]  path to configuration file (default:~/.config/xawt.conf)
       -d, --dry-run             trace commands without executing
       -v, --verbose             emit detailed trace for debugging
 
@@ -91,9 +95,9 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
 [MIT](./LICENSE)
 
 [$XDG_CONFIG_HOME]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-[default configuration file]: ./app/default-config.yml
+[default configuration file]: ./app/default.conf
+[leanconf]: https://github.com/dizzib/leanconf
 [node.js]: http://nodejs.org
 [parenthesised substring matches]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_parenthesized_substring_matches
 [JavaScript regular expression]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [X11]: https://en.wikipedia.org/wiki/X_Window_System
-[yaml]: https://en.wikipedia.org/wiki/YAML

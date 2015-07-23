@@ -35,7 +35,7 @@ before ->
   T := require \../app/action
 
 test 'null state' ->
-  A.deepEqual [] T.find null \in
+  A.deepEqual T.find(null \in), []
 
 describe 'immediate' ->
   run \in  'a'   <[ a.in ]> <[ a ]>
@@ -58,4 +58,4 @@ describe 'immediate' ->
         command  : c
         delay    : 0
         direction: dirn
-      A.deepEqual expect, T.find title:title, dirn
+      A.deepEqual (T.find title:title, dirn), expect
