@@ -1,5 +1,4 @@
 Cp   = require \child_process
-_    = require \lodash
 U    = require \util
 Log  = require \./log
 Args = require \./args
