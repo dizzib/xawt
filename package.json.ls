@@ -18,7 +18,6 @@ dependencies:
   commander  : \2.6.0
   leanconf   : \0.2.0
   lodash     : \3.5.0
-  shelljs    : \0.3.0
   x11        : \1.0.3
 devDependencies:
   chai       : \~3.0.0
@@ -31,6 +30,7 @@ devDependencies:
   lolex      : \~1.2.1
   mocha      : \~2.2.5
   mockery    : \~1.4.0
+  shelljs    : \~0.3.0
   'wait.for' : \~0.6.3
 engines:
   node: '>=0.10.x'

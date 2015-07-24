@@ -1,7 +1,6 @@
 A    = require \assert
 Fs   = require \fs
 Lc   = require \leanconf
-Sh   = require \shelljs/global
 Args = require \./args
 
 var cache, fsw
@@ -10,15 +9,19 @@ module.exports = me =
   get : -> cache
   load: ->
     me.reset!
-    unless test \-e path = Args.config-path
+    path = Args.config-path
+    try
+      log.debug "load config from #path"
+      conf = Fs.readFileSync path
+    catch e
+      return throw e unless e.code is \ENOENT
       log "Unable to find configuration file #path"
       unless Args.is-default-config-path
         log 'Please ensure this path is correct and the file exists.'
         return me
       log "Copying default config to #path"
-      cp "#__dirname/default.conf" path
-    log.debug "load config from #path"
-    cfg = Lc.parse Fs.readFileSync path
+      Fs.writeFileSync path, conf = Fs.readFileSync "#__dirname/default.conf"
+    cfg = Lc.parse conf
     cache := {}
     for k, v of cfg
       if (key = k.split '/').0.length or not key.1.length or key.2.length
