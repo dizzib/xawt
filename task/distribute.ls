@@ -12,12 +12,10 @@ module.exports =
     cp \-f "#{Dir.ROOT}/readme.md" Dir.build.APP
 
   publish-local: ->
-    pushd Dir.build.APP
-    try
-      port = Args.reggie-server-port
-      W4 exec, "reggie -u http://localhost:#port publish" silent:false
-    finally
-      popd!
+    throw new Error 'please specify local dir on command line' unless dest = Args.npm-local
+    log "publish to local #dest"
+    rm \-rf dest
+    cp \-r "#{Dir.build.APP}/*" dest
 
   publish-public: ->
     pushd Dir.build.APP

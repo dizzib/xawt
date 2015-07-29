@@ -6,7 +6,6 @@ Rl     = require \readline
 Shell  = require \shelljs/global
 WFib   = require \wait.for .launchFiber
 App    = require \./app
-Args   = require \./args
 Build  = require \./build
 Consts = require \./constants
 DirBld = require \./constants .dir.BUILD
@@ -24,25 +23,22 @@ const COMMANDS =
   * cmd:'b.d ' level:0 desc:'build   - delete'                fn:Build.delete-files
   * cmd:'r   ' level:0 desc:'app     - recycle'               fn:App.recycle
   * cmd:'t   ' level:0 desc:'test    - run'                   fn:Test.run
-  * cmd:'d.lo' level:1 desc:'distrib - publish to local'      fn:Dist.publish-local
+  * cmd:'d.lo' level:1 desc:'distrib - publish to local dir'  fn:Dist.publish-local
   * cmd:'d.PU' level:2 desc:'distrib - publish to public npm' fn:Dist.publish-public
-
-max-level = if Args.reggie-server-port then 2 else 0
-commands = _.filter COMMANDS, -> it.level <= max-level
 
 config.fatal  = true # shelljs doesn't raise exceptions, so set this process to die on error
 #config.silent = true # otherwise too much noise
 
 cd DirBld # for safety, set working directory to build
 
-for c in commands then c.display = "#{Chalk.bold CHALKS[c.level] c.cmd} #{c.desc}"
+for c in COMMANDS then c.display = "#{Chalk.bold CHALKS[c.level] c.cmd} #{c.desc}"
 
 rl = Rl.createInterface input:process.stdin, output:process.stdout
   ..setPrompt "#{Consts.APPNAME} >"
   ..on \line (cmd) ->
     <- WFib
     rl.pause!
-    for c in commands when cmd is c.cmd.trim!
+    for c in COMMANDS when cmd is c.cmd.trim!
       try c.fn!
       catch e then log e
     rl.resume!
@@ -68,4 +64,4 @@ function build-all
   catch e then G.err e
 
 function show-help
-  for c in commands then log c.display
+  for c in COMMANDS then log c.display
