@@ -21,12 +21,12 @@ module.exports = me = (new Evem!) with do
     xerr <- x.InternAtom false \_NET_ACTIVE_WINDOW
     return cb wrap-xerr "x.InternAtom _NET_ACTIVE_WINDOW failed" xerr if xerr
     x.ChangeWindowAttributes root, eventMask:X11.eventMask.PropertyChange
-    q = Asyn.queue worker, 1
-    x.on \event -> q.push it, (err) -> log err if err
     err, wid <- get-active-wid
     return cb err if err or not wid
     err, cur <- me.get-window-state wid
     state := current:cur
+    q = Asyn.queue worker, 1
+    x.on \event -> q.push it, (err) -> log err if err
     cb ...
 
 function get-active-wid cb

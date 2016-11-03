@@ -1,5 +1,5 @@
 name       : \xawt
-version    : \0.1.0
+version    : \0.1.1
 description: "Run shell commands when the active window focus changes"
 keywords   : <[ command exec focus shell trigger X11 ]>
 homepage   : \https://github.com/dizzib/xawt
