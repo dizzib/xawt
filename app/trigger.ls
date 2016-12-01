@@ -1,6 +1,6 @@
 Cp   = require \child_process
 U    = require \util
-Log  = require \./log
+Log  = require \./log   # Log is mocked but global log isn't
 Args = require \./args
 Act  = require \./action
 Cfg  = require \./config .load!
@@ -20,6 +20,12 @@ Xaw.on \changed ->
   do-actions \out it.previous
   do-actions \in it.current
 
+function add-pending act, wid, key
+  secs = act[key] * 1000ms
+  log.debug "add pending[#newid] = act:#{U.inspect act} wid:#wid key:#key"
+  t = setTimeout run-pending, secs, newid
+  pending[newid++] = act:act, timeout:t, wid:wid
+
 function clear-pendings direction, state
   return unless state?
   for id, p of pending when p.act.direction is direction and p.wid is state.wid
@@ -29,17 +35,16 @@ function clear-pendings direction, state
 
 function do-actions direction, state
   for act in Act.find state, direction
-    if d = act.delay * 1000
-      log.debug "add pending[#newid] = act:#{U.inspect act} wid:#{state.wid}"
-      t = setTimeout run-pending, d, newid
-      pending[newid++] = act:act, timeout:t, wid:state.wid
+    if act.delay
+      add-pending act, state.wid, \delay
     else
-      run-command act.command
+      run-command act
 
-function run-command
-  return Log "dry-run #it" if Args.dry-run
-  log.debug it
-  err, stdout, stderr <- Cp.exec it
+function run-command act
+  cmd = act.command
+  return Log "dry-run #cmd" if Args.dry-run
+  log.debug cmd
+  err, stdout, stderr <- Cp.exec cmd
   return Log err if err
   Log stdout if stdout.length
   Log stderr if stderr.length
@@ -51,4 +56,4 @@ function run-pending id
   err, state <- Xaw.get-window-state wid = p.wid
   return Log err if err
   return log.debug "window #wid has closed -- aborting" unless state?
-  run-command p.act.command
+  run-command p.act
