@@ -22,7 +22,7 @@ const RULES =
       delay: 0
     out:
       command: '$1 $2 bar'
-      delay: 0
+      retry: 0
 
 var args, cfg, T
 
@@ -58,4 +58,5 @@ describe 'immediate' ->
         command  : c
         delay    : 0
         direction: dirn
+        retry    : 0
       A.deepEqual (T.find title:title, dirn), expect

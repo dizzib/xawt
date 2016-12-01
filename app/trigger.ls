@@ -38,16 +38,17 @@ function do-actions direction, state
     if act.delay
       add-pending act, state.wid, \delay
     else
-      run-command act
+      run-command act, state.wid
 
-function run-command act
+function run-command act, wid
   cmd = act.command
   return Log "dry-run #cmd" if Args.dry-run
   log.debug cmd
   err, stdout, stderr <- Cp.exec cmd
-  return Log err if err
-  Log stdout if stdout.length
-  Log stderr if stderr.length
+  Log err if err
+  Log stdout if stdout?length
+  Log stderr if stderr?length
+  add-pending act, wid, \retry if err and act.retry
 
 function run-pending id
   log.debug "run pending[#id]"
@@ -56,4 +57,4 @@ function run-pending id
   err, state <- Xaw.get-window-state wid = p.wid
   return Log err if err
   return log.debug "window #wid has closed -- aborting" unless state?
-  run-command p.act
+  run-command p.act, wid

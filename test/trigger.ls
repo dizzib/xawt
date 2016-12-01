@@ -8,7 +8,7 @@ L = require \lolex
 M = require \mockery
 
 var clock, out
-var args, act, cfg, xaw
+var args, act, cfg, cp, xaw
 
 after ->
   clock.uninstall!
@@ -17,9 +17,7 @@ after ->
 before ->
   clock := L.install!
   M.enable warnOnUnregistered:false useCleanCache:true
-  M.registerMock \child_process exec: (cmd, cb) ->
-    return cb new Error cmd if _.endsWith cmd, \B
-    if _.endsWith cmd, \b then cb null '' cmd else cb null, cmd, ''
+  M.registerMock \child_process cp := {}
   M.registerMock \./args args := {}
   M.registerMock \./action act := {}
   M.registerMock \./config cfg := load:->cfg
@@ -31,6 +29,9 @@ beforeEach ->
   M.resetCache!
   args.dry-run = false
   cfg.get = -> {}
+  cp.exec = (cmd, cb) ->
+    return cb new Error cmd if _.endsWith cmd, \B
+    if _.endsWith cmd, \b then cb null '' cmd else cb null, cmd
   xaw.init = -> it!
   out := []
 
@@ -59,10 +60,11 @@ describe 'immediate' ->
 
   function run pre, cur, expect, dry-run = false
     test "#pre --> #cur" ->
-      act.find = (s, d) -> [command:"#d #c" delay:0 for c in s.title]
+      act.find = (s, d) -> [command:"#d #c" for c in s.title]
       args.dry-run = dry-run
       require \../app/trigger
       emit pre, cur
+      clock.tick 1000 * 1000ms # ensure no retries have occurred
       assert-out expect
 
 describe 'delay' ->
@@ -111,7 +113,7 @@ describe 'delay' ->
         xaw.get-window-state = (wid, cb) -> cb null null
         assert-after 99 'out 0'
 
-    describe 'cancel' ->
+    describe 'cancel pending' ->
       test 'in' ->
         emit 0 10
         emit 10 0
@@ -127,9 +129,29 @@ describe 'delay' ->
         emit 10 0
         assert-after 99 'in 0;out 10;out 20'
 
-  function assert-after secs, expect
-    clock.tick secs * 1000
-    assert-out expect
+describe 'retry' ->
+  beforeEach ->
+    const RETRY = in:10 out:0
+    act.find = (s, d) -> [command:"#d #{s.title}" retry:RETRY[d], direction:d]
+    require \../app/trigger
+
+  test '2 fails then ok' ->
+    emit \a \B
+    assert-out 'out a;Error: in B'
+    assert-after 9 'out a;Error: in B'
+    assert-after 10 'out a;Error: in B;Error: in B'
+    cp.exec = (cmd, cb) -> cb null, cmd
+    assert-after 1000 'out a;Error: in B;Error: in B;in B'
+
+  test 'fail then cancel pending "in B"' ->
+    emit \a \B
+    assert-out 'out a;Error: in B'
+    emit \B \a
+    assert-after 1000 'out a;Error: in B;Error: out B;in a'
+
+function assert-after secs, expect
+  clock.tick secs * 1000ms
+  assert-out expect
 
 function assert-out
   A.equal it, out * ';'

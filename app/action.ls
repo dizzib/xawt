@@ -12,6 +12,10 @@ module.exports =
       for submatch, i in r when i > 0
         log.debug "submatch $#i=#submatch"
         cmd .= replace (new RegExp "\\$#i" \g), submatch
-      res.push command:cmd, delay:(act.delay or 0), direction:direction
+      res.push do
+        command  : cmd
+        delay    : act.delay or 0
+        direction: direction
+        retry    : act.retry or 0
     log.debug 'found commands:' res
     res

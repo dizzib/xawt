@@ -68,11 +68,13 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
         command: vboxmanage controlvm $1 pause
         delay: 30
 
-    # pause virtualbox guest 60 seconds after losing focus unless vlc is running
+    # pause virtualbox guest 60 seconds after losing focus unless vlc is running,
+    # in which case keep retrying every 90 seconds until vlc closes.
     /^(SWEEP) \[Running\] - Oracle VM VirtualBox$/:
       out:
         command: (! vboxmanage guestcontrol $1 run --wait-stdout --exe /bin/pgrep -- arg0 vlc) && vboxmanage controlvm $1 pause
         delay: 60
+        retry: 90
 
 ## options
 
