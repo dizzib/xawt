@@ -1,6 +1,7 @@
 A    = require \assert
 Fs   = require \fs
 Lc   = require \leanconf
+_    = require \lodash
 Args = require \./args
 
 var cache, fsw
@@ -8,6 +9,10 @@ var cache, fsw
 module.exports = me =
   get : -> cache
   load: ->
+    function reload ev, fname
+      return unless ev is \change
+      log "Reload #path"
+      me.load!
     me.reset!
     path = Args.config-path
     try
@@ -27,10 +32,8 @@ module.exports = me =
       if (key = k.split '/').0.length or not key.1.length or key.2.length
         throw new Error "key #k must be /regex/"
       cache[k] = v <<< rx:new RegExp key.1
-    fsw := Fs.watch path, (ev, fname) ->
-      return unless ev is \change
-      log "Reload #path"
-      me.load!
+    # some text editors write multiple times, so we must debounce
+    fsw := Fs.watch path, _.debounce reload, 100ms, leading:false trailing:true
     me
   reset: -> # for tests
     fsw?close!
