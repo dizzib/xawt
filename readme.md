@@ -3,9 +3,10 @@
 
 * run shell commands when a window receives or loses focus
 * optional delay
+* optional retry period for failed commands
 
-Use it to prevent idling background applications from surreptitiously
-stealing your cpu cycles.
+I use it to prevent too many idling virtualbox guests from surreptitiously
+stealing cpu cycles.
 
 ## install globally and run
 
@@ -35,18 +36,22 @@ On its first run xawt copies the [default configuration file] to
 * `action` :
   either the shell command to run immediately, or
 
-      delay: dly
-      command: cmd
+      command: shell-command
+      delay: delay-secs
+      retry: retry-secs
 
-  to run cmd after dly seconds unless the window's focus subsequently changes
-  before cmd has run.
+  * `delay:` : (optional) number of seconds to wait before running the shell
+    command, as long as the window's focus remains unchanged.
+    If not supplied, a value of 0 is used.
+  * `retry:` : (optional) number of seconds to wait before retrying a failed
+    shell command. If not supplied, a failed command is never retried.
 
 Commands can include [parenthesised substring matches] by the `$` symbol where
 `$1` is the first submatch, `$2` the second, etc.
 
     # xawt.conf example configuration
 
-    # freeze Firefox unless it has the focus
+    # freeze Firefox (after 10 seconds) unless it has the focus
     /- (Mozilla Firefox|Vimperator)$/:
       in: pkill -CONT firefox
       out:
@@ -66,7 +71,7 @@ Commands can include [parenthesised substring matches] by the `$` symbol where
     # pause virtualbox guest 60 seconds after losing focus unless vlc is running
     /^(SWEEP) \[Running\] - Oracle VM VirtualBox$/:
       out:
-        command: (! vboxmanage guestcontrol $1 exec --wait-stdout --image /bin/pgrep -- vlc) && vboxmanage controlvm $1 pause
+        command: (! vboxmanage guestcontrol $1 run --wait-stdout --exe /bin/pgrep -- arg0 vlc) && vboxmanage controlvm $1 pause
         delay: 60
 
 ## options
