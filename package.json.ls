@@ -23,7 +23,7 @@ devDependencies:
   chalk      : \~0.4.0
   chokidar   : \~1.0.1
   cron       : \~1.0.3
-  gntp       : \~0.1.1
+  growly     : \~1.3.0
   istanbul   : \~0.3.13
   livescript : \~1.4.0
   lodash     : \~3.5.0
