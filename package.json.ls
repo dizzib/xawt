@@ -17,6 +17,7 @@ dependencies:
   async      : \1.3.0
   commander  : \2.9.0
   leanconf   : \0.2.1
+  lodash     : \4.16.6
   x11        : \2.2.0
 devDependencies:
   chai       : \~3.5.0
@@ -26,7 +27,6 @@ devDependencies:
   growly     : \~1.3.0
   istanbul   : \~0.4.4
   livescript : \~1.5.0
-  lodash     : \~4.16.6
   lolex      : \~1.5.1
   mocha      : \~3.1.2
   mockery    : \~2.0.0
