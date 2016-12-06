@@ -5,8 +5,8 @@
 * optional delay
 * optional retry period for failed commands
 
-I use it to prevent too many idling virtualbox guests from surreptitiously
-stealing cpu cycles.
+I use it to prevent too many idling applications from surreptitiously
+stealing cpu cycles, but you may find it useful in other ways.
 
 ## install globally and run
 
