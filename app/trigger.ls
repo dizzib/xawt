@@ -15,10 +15,15 @@ pending = {}
 
 Xaw.on \changed ->
   log.debug \changed it
-  clear-pendings \in it.previous
-  clear-pendings \out it.current
+  clear-pendings \in it.previous?wid
+  clear-pendings \out it.current?wid
   do-actions \out it.previous
   do-actions \in it.current
+
+Xaw.on \closed ->
+  log.debug \closed it
+  clear-pendings \in it
+  clear-pendings \out it
 
 function add-pending act, wid, key
   secs = act[key] * 1000ms
@@ -26,9 +31,9 @@ function add-pending act, wid, key
   t = setTimeout run-pending, secs, newid
   pending[newid++] = act:act, timeout:t, wid:wid
 
-function clear-pendings direction, state
-  return unless state?
-  for id, p of pending when p.act.direction is direction and p.wid is state.wid
+function clear-pendings direction, wid
+  return unless wid?
+  for id, p of pending when p.act.direction is direction and p.wid is wid
     log.debug "clear pending[#id]"
     clearTimeout p.timeout
     delete pending[id]
@@ -56,5 +61,4 @@ function run-pending id
   delete pending[id]
   err, state <- Xaw.get-window-state wid = p.wid
   return Log err if err
-  return log.debug "window #wid has closed -- aborting" unless state?
   run-command p.act, wid

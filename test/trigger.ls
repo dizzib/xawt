@@ -103,15 +103,15 @@ describe 'delay' ->
       assert-after 1 'in 5;out 10'
 
     describe 'close' ->
-      test 'fast (null state)' ->
-        emit 10 5
-        emit null 0
-        assert-after 1 'in 0'
-
-      test 'slow' ->
+      test 'in' ->
         emit 0 10
-        xaw.get-window-state = (wid, cb) -> cb null null
+        xaw.emit \closed 10
         assert-after 99 'out 0'
+
+      test 'out' ->
+        emit 10 0
+        xaw.emit \closed 10
+        assert-after 99 'in 0'
 
     describe 'cancel pending' ->
       test 'in' ->

@@ -7,7 +7,7 @@ E   = require \events .EventEmitter
 _   = require \lodash
 M   = require \mockery
 
-var names, out, T, x11
+var actual, names, T, x11
 disp = client:(x = new E!), screen:[root = 999]
 delay = (ms, fn) -> _.delay fn, ms
 
@@ -20,13 +20,15 @@ before ->
   M.registerMock \x11 x11 := eventMask:{}
 beforeEach ->
   names := <[ null red blue green ]>
-  out := []
+  actual := []
   x.removeAllListeners!
   M.resetCache!
   T := require \../app/x11-active-window
   T.on \changed ->
     function codify state then if state then "#{state.wid}:#{state.title}" else ':'
-    out.push "#{codify it.previous}->#{codify it.current}"
+    actual.push "#{codify it.previous}->#{codify it.current}"
+  T.on \closed ->
+    actual.push "#it closed"
 
 function init-x11 spec
   x11.createClient = (cb) -> cb spec.cc?err, disp
@@ -42,15 +44,15 @@ function mock-gp spec
       cb (if _.isObject(o = names[wid]) then o else spec.gpn?err), data:names[wid]
 
 eq  = A.equal
-eqo = -> eq out * \; it
+eqa = -> eq actual * \; it
 deq = A.deepEqual
 
 describe 'init' ->
   describe 'error handing' ->
     test-init 'x11.createClient' \err cc:err:new Error \err
-    test-init 'x.InternAtom' 'x.InternAtom _NET_ACTIVE_WINDOW failed. err' ia:err:message:\err
-    test-init 'x.GetProperty AW' 'x.GetProperty _NET_ACTIVE_WINDOW failed. err' gpw:err:message:\err
-    test-init 'x.GetProperty WN' 'x.GetProperty WM_NAME failed (wid=1). err' gpw:1 gpn:err:message:\err
+    test-init 'x.InternAtom' 'x.InternAtom _NET_ACTIVE_WINDOW failed. err [9]' ia:err:{error:9 message:\err}
+    test-init 'x.GetProperty AW' 'x.GetProperty _NET_ACTIVE_WINDOW failed. err [9]' gpw:err:{error:9 message:\err}
+    test-init 'x.GetProperty WN' 'x.GetProperty WM_NAME failed (wid=1). err [9]' gpw:1 gpn:err:{error:9 message:\err}
   test-init 'x.GetProperty AW returns 0' void gpw:0
   test-init 'success' {title:\red wid:1} gpw:1
 
@@ -65,7 +67,7 @@ describe 'init' ->
         deq res, expect
       done!
 
-describe 'active-window change' ->
+describe 'active window focus change' ->
   test-aw-change 'not _NET_ACTIVE_WINDOW change' '' -1 [0]
   test-aw-change 'x.GetProperty AW returns 0' '' 1 [0]
   test-aw-change 'x.GetProperty AW returns error' '' 1 [\err]
@@ -78,28 +80,35 @@ describe 'active-window change' ->
       init-x11 gpw:1
       <- T.init
       <- Asy.eachSeries seq, (wid, cb) ->
-        mock-gp gpw: if wid is \err then err:message:\errmsg else wid
-        x.emit \event atom:atom
+        mock-gp gpw: if wid is \err then err:{error:9 message:\errmsg} else wid
+        x.emit \event atom:atom, name:\PropertyNotify
         delay 5 cb
       <- delay 50
-      eqo expect
+      eqa expect
       done!
 
-describe 'current window changed in background' ->
+describe 'active window property change' ->
   test-bg-change 'change title' '1:red->2:blue;2:cyan->3:green' \cyan
-  test-bg-change 'close window' '1:red->2:blue;:->3:green' error:3 message:'bad window'
   test-bg-change 'x11 error' '1:red->2:blue' error:1 message:\errmsg
 
   function test-bg-change desc, expect, spec
     test desc, (done) ->
       function set-aw wid, cb
         mock-gp gpw:wid
-        x.emit \event atom:1
+        x.emit \event atom:1, name:\PropertyNotify
         delay 20 cb
       init-x11 gpw:1
       <- T.init
       <- set-aw 2
       names.2 = spec
       <- set-aw 3
-      eqo expect
+      eqa expect
       done!
+
+test 'window closed' (done) ->
+  init-x11 gpw:1
+  <- T.init
+  x.emit \event name:\UnmapNotify wid:1
+  <- delay 5
+  eqa '1 closed'
+  done!
